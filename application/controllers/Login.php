@@ -25,7 +25,7 @@ class login extends CI_Controller
 		$res = $query->row_array();
 
 		if ($query->num_rows() == 1) {
-			$data_session = ["id" => $res['id'], "username" => $res['username'], "username" => $res['username'], "first_name" => $res['nama_depan'], "last_name" => $res['nama_belakang'], "role" => $res['role'], 'logged_in' => 'login'];
+			$data_session = ["id" => $res['id_level'], "username" => $res['username'], "username" => $res['username'], "role" => $res['role'], 'logged_in' => 'login'];
 			$this->session->set_userdata($data_session);
 			$this->session->set_userdata('login', $data_session);
 			if ($res['role'] == 'admin') {
@@ -36,8 +36,8 @@ class login extends CI_Controller
 				redirect(base_url('home'));
 			}
 		} else {
-			$this->session->set_flashdata('error_message', 'Incorrect username or password');
-			redirect(base_url('auth'));
+			$this->session->set_flashdata('error_message', 'Incorrect username or password!');
+			redirect(base_url('login'));
 		}
 	}
 

@@ -30,49 +30,49 @@
    <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
       <ul class="space-y-2 font-medium">
          <li>
-            <a href="<?php echo base_url('admin') ?>" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-               <i class="fas fa-chart-pie"></i>
+            <a href="<?php echo base_url('admin') ?>" class="<?php echo $menu === 'dashboard' ? 'text-white bg-primary' : 'text-gray-800 hover:bg-sky-100 dark:hover:bg-gray-700' ?> flex items-center p-2 rounded-lg dark:text-white group">
+               <i class="text-lg fas fa-chart-pie"></i>
                <span class="ms-3">Dashboard</span>
             </a>
          </li>
          <li>
-            <a href="<?php echo base_url('admin/rak_buku') ?>" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-               <i class="fas fa-table"></i>
+            <a href="<?php echo base_url('admin/rak_buku') ?>" class="<?php echo $menu === 'rak' ? 'text-white bg-primary' : 'text-gray-800 hover:bg-sky-100 dark:hover:bg-gray-700' ?> flex items-center p-2 rounded-lg dark:text-white group">
+               <i class="text-lg fas fa-table"></i>
                <span class="flex-1 ms-3 whitespace-nowrap">Rak Buku</span>
             </a>
          </li>
          <li>
-            <a href="<?php echo base_url('admin/kategori_buku') ?>" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-               <i class="fas fa-list"></i>
+            <a href="<?php echo base_url('admin/kategori_buku') ?>" class="<?php echo $menu === 'kategori' ? 'text-white bg-primary' : 'text-gray-800 hover:bg-sky-100 dark:hover:bg-gray-700' ?> flex items-center p-2 rounded-lg dark:text-white group">
+               <i class="text-lg fas fa-list"></i>
                <span class="flex-1 ms-3 whitespace-nowrap">Kategori Buku</span>
             </a>
          </li>
          <li>
-            <a href="<?php echo base_url('admin/buku') ?>" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-               <i class="fas fa-book"></i> <span class="flex-1 ms-3 whitespace-nowrap">Buku</span>
+            <a href="<?php echo base_url('admin/buku') ?>" class="<?php echo $menu === 'buku' ? 'text-white bg-primary' : 'text-gray-800 hover:bg-sky-100 dark:hover:bg-gray-700' ?> flex items-center p-2 rounded-lg dark:text-white group">
+               <i class="text-lg fas fa-book"></i> <span class="flex-1 ms-3 whitespace-nowrap">Buku</span>
             </a>
          </li>
          <li>
-            <a href="<?php echo base_url('admin/anggota') ?>" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-               <i class="fas fa-users"></i>
+            <a href="<?php echo base_url('admin/anggota') ?>" class="<?php echo $menu === 'anggota' ? 'text-white bg-primary' : 'text-gray-800 hover:bg-sky-100 dark:hover:bg-gray-700' ?> flex items-center p-2 rounded-lg dark:text-white group">
+               <i class="text-lg fas fa-users"></i>
                <span class="flex-1 ms-3 whitespace-nowrap">Anggota</span>
             </a>
          </li>
          <li>
-            <a href="<?php echo base_url('admin/peminjaman_buku') ?>" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-               <i class="fas fa-arrow-alt-circle-right"></i>
+            <a href="<?php echo base_url('admin/peminjaman_buku') ?>" class="<?php echo $menu === 'peminjaman' ? 'text-white bg-primary' : 'text-gray-800 hover:bg-sky-100 dark:hover:bg-gray-700' ?> flex items-center p-2 rounded-lg dark:text-white group">
+               <i class="text-lg fas fa-arrow-alt-circle-right"></i>
                <span class="flex-1 ms-3 whitespace-nowrap">Peminjaman</span>
             </a>
          </li>
          <li>
-            <a href="<?php echo base_url('admin/pengembalian_buku') ?>" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-               <i class="fas fa-arrow-alt-circle-left"></i>
+            <a href="<?php echo base_url('admin/pengembalian_buku') ?>" class="<?php echo $menu === 'pengembalian' ? 'text-white bg-primary' : 'text-gray-800 hover:bg-sky-100 dark:hover:bg-gray-700' ?> flex items-center p-2 rounded-lg dark:text-white group">
+               <i class="text-lg fas fa-arrow-alt-circle-left"></i>
                <span class="flex-1 ms-3 whitespace-nowrap">Pengembalian</span>
             </a>
          </li>
-         <li class="fixed bottom-3 ">
+         <li class="fixed bottom-3">
             <a href="<?php echo base_url('login/logout') ?>" class="flex w-full items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-               <i class="far fa-circle"></i>
+               <i class="text-lg far fa-circle"></i>
                <span class="flex-1 ms-3 whitespace-nowrap">Keluar</span>
             </a>
          </li>

@@ -12,9 +12,9 @@
     <?php $this->load->view('style/sidebar') ?>
     <div class="p-4 sm:ml-64 bg-gray-100  min-h-screen font-popins">
         <div class="mt-14 flex justify-between">
-            <h1 class="text-xl font-semibold">Rak Buku</h1>
+            <h1 class="text-xl font-semibold">Kategori Buku</h1>
             <ul class="flex gap-2">
-                <li class=""> Rak Buku</li>
+                <li class=""> Kategori Buku</li>
             </ul>
         </div>
         <div class="bg-white p-5 mt-5 ">
@@ -32,7 +32,10 @@
                                 No
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Nama Rak
+                                Rak
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Kategori Buku
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Aksi
@@ -40,29 +43,39 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $no = 0;
-                        foreach ($rak as $rak) : $no++ ?>
+                        <?php if ($kategori) : ?>
+                            <?php $no = 0;
+                            foreach ($kategori as $row) : $no++ ?>
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        <?php echo $no ?>
+                                    </th>
+                                    <td class="px-6 py-4">
+                                        <?php echo tampil_nama_rak($row->id_rak) ?>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <?php echo $row->nama_kategori ?>
+                                    </td>
+                                    <td class="px-6 py-4 flex">
+                                        <button type="button" data-modal-target="default-modal2" data-modal-toggle="default-modal2" onclick='tampilId(<?php echo $row->id_kategori ?>)' class="text-white bg-primary hover:bg-sky-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1">
+                                            <i class="text-base sm:text-lg fas fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="ml-3 text-white bg-red-500 hover:bg-red-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1" onclick="hapus(<?php echo $row->id_kategori ?>)"> <i class="text-base sm:text-lg fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            <?php endforeach ?>
+                        <?php else : ?>
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    <?php echo $no ?>
+                                <th scope="row" colspan="4" class="text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Tidak ada data
                                 </th>
-                                <td class="px-6 py-4">
-                                    <?php echo $rak->nama_rak ?>
-                                </td>
-                                <td class="px-6 py-4 flex">
-                                    <button type="button" data-modal-target="default-modal2" data-modal-toggle="default-modal2" onclick='tampilId(<?php echo $rak->id_rak ?>)' class="text-white bg-primary hover:bg-sky-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1">
-                                        <i class="text-base sm:text-lg fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="ml-3 text-white bg-red-500 hover:bg-red-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1" onclick="hapus(<?php echo $rak->id_rak ?>)"> <i class="text-base sm:text-lg fas fa-trash"></i>
-                                    </button>
-                                </td>
                             </tr>
-                        <?php endforeach ?>
+                        <?php endif ?>
                     </tbody>
                 </table>
             </div>
         </div>
-
 
 
         <div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden mx-auto fixed top-0 right-0 left-0 z-50 justify-center items-center w-full sm:w-1/2 md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -70,7 +83,7 @@
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                            Tambah Rak
+                            Tambah Kategori Buku
                         </h3>
                         <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -80,10 +93,23 @@
                             <span class="sr-only">Close modal</span>
                         </button>
                     </div>
-                    <form action="<?php echo base_url('admin/aksi_tambah_rak') ?>" method="post" class="p-4 md:p-5 space-y-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Rak</label>
-                        <div class="mb-4">
-                            <input type="text" name="rak" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nama Rak">
+                    <form action="<?php echo base_url('admin/aksi_tambah_kategori') ?>" method="post" class="p-4 md:p-5 space-y-4">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rak</label>
+                            <div class="mb-4">
+                                <select name="rak" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option selected>Pilih Rak</option>
+                                    <?php foreach ($rak as $row) : ?>
+                                        <option value="<?php echo $row->id_rak ?>"><?php echo $row->nama_rak ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Kategori</label>
+                            <div class="mb-4">
+                                <input type="text" name="kategori" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nama Kategori Buku">
+                            </div>
                         </div>
                         <div class="flex items-center border-t pt-4 border-gray-200 rounded-b dark:border-gray-600">
                             <button type="submit" class="text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-primary dark:focus:ring-sky-600">Tambah</button>
@@ -99,7 +125,7 @@
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                            Edit Rak
+                            Edit Kategori Buku
                         </h3>
                         <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal2">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -109,10 +135,23 @@
                             <span class="sr-only">Close modal</span>
                         </button>
                     </div>
-                    <form onsubmit="editRak(event)" method="post" class="p-4 md:p-5 space-y-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Rak</label>
-                        <div class="mb-4">
-                            <input type="text" name="nama_rak" id="nama_rak" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nama Rak">
+                    <form onsubmit="editKategori(event)" method="post" class="p-4 md:p-5 space-y-4">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Rak</label>
+                            <div class="mb-4">
+                                <select id="rak" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option selected>Pilih Rak</option>
+                                    <?php foreach ($rak as $row) : ?>
+                                        <option value="<?php echo $row->id_rak ?>"><?php echo $row->nama_rak ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Kategori</label>
+                            <div class="mb-4">
+                                <input type="text" id="kategori" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nama Kategori Buku">
+                            </div>
                         </div>
                         <div class="flex items-center border-t pt-4 border-gray-200 rounded-b dark:border-gray-600">
                             <button type="submit" class="text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-primary dark:focus:ring-sky-600">Edit</button>
@@ -130,25 +169,29 @@
         function hapus(id) {
             var yes = confirm('Anda Yakin Untuk Menghapus?');
             if (yes == true) {
-                window.location.href = "<?php echo base_url('admin/hapus_rak/') ?>" + id;
+                window.location.href = "<?php echo base_url('admin/hapus_kategori/') ?>" + id;
             }
         }
 
-        let nama_rak = $('#nama_rak');
+        let rak = $('#rak');
+        let kategori = $('#kategori');
         let selectedId = null;
 
         function tampilId(id) {
             selectedId = id;
             console.log("Clicked button with ID:", selectedId);
             $.ajax({
-                url: '<?php echo base_url('admin/get_rak') ?>',
+                url: '<?php echo base_url('admin/get_kategori') ?>',
                 method: 'POST',
+                dataType: 'json',
                 data: {
                     id: selectedId
                 },
                 success: function(response) {
                     console.log(response);
-                    nama_rak.val(response);
+                    console.log(response[0]['id_rak']);
+                    rak.val(response[0]['id_rak']);
+                    kategori.val(response[0]['nama_kategori']);
                 },
                 error: function(error) {
                     console.error(error);
@@ -156,15 +199,16 @@
             });
         }
 
-        function editRak(e) {
+        function editKategori(e) {
             e.preventDefault();
             console.log("Testing");
             $.ajax({
-                url: '<?= base_url(); ?>admin/aksi_edit_rak',
+                url: '<?= base_url(); ?>admin/aksi_edit_kategori',
                 method: 'POST',
                 data: {
                     id: selectedId,
-                    nama_rak: nama_rak.val(),
+                    rak: rak.val(),
+                    kategori: kategori.val(),
                 },
                 error: function(me) {
                     console.log(me);
