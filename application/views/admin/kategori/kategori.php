@@ -4,9 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S'Library</title>
+    <title>L'Binusa</title>
     <?php $this->load->view('style/head') ?>
 </head>
+<style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 0.5em auto;
+        list-style: none;
+    }
+
+    .pagination a,
+    .pagination li.active a {
+        border: 1px solid silver;
+        padding: 0.1em 0.5em;
+        border-radius: 10px;
+        color: black;
+        margin-right: 0.5em;
+        text-decoration: none;
+    }
+
+    .pagination a:hover,
+    .pagination li.active a {
+        border: 1px solid rgb(14 165 233);
+        background-color: rgb(14 165 233);
+        color: white;
+    }
+</style>
 
 <body>
     <?php $this->load->view('style/sidebar') ?>
@@ -74,6 +99,9 @@
                         <?php endif ?>
                     </tbody>
                 </table>
+            </div>
+            <div class="pagination">
+                <?php echo $pagination_links; ?>
             </div>
         </div>
 

@@ -26,6 +26,11 @@ class m_admin extends CI_Model
         return $data;
     }
 
+    // public function insert_data($data)
+    // {
+    //     $this->db->insert_batch('table_level', $data);
+    // }
+
     // RAK
     public function tambah_rak($data)
     {
@@ -79,10 +84,30 @@ class m_admin extends CI_Model
         $this->db->insert('table_member', $data);
         return $this->db->insert_id();
     }
-    
+
     public function tambah_level($data)
     {
         $this->db->insert('table_level', $data);
+        return $this->db->insert_id();
+    }
+
+    // for pagination
+    public function get_items($limit, $offset, $tabel)
+    {
+        $this->db->limit($limit, $offset);
+        $query = $this->db->get($tabel);
+        return $query->result();
+    }
+
+    public function count_items($tabel)
+    {
+        return $this->db->get($tabel)->num_rows();
+    }
+
+    // PEMINJAMAN
+    public function tambah_index_pinjam($data)
+    {
+        $this->db->insert('tabel_index_pinjam', $data);
         return $this->db->insert_id();
     }
 }

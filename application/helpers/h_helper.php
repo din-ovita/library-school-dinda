@@ -111,5 +111,18 @@ function idLevel_byMember($id)
         $stmt = $c->id_level;
         $level = $level . $stmt;
     }
-    return $level;}
+    return $level;
+}
+
+function nama_byNis($id)
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $result = $ci->db->where('nis', $id)->get('table_member');
+    foreach ($result->result() as $c) {
+        $stmt = $c->nama;
+        return $stmt;
+    }
+}
+
 // END ANGGOTA

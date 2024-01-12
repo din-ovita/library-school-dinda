@@ -9,7 +9,7 @@
                </svg>
             </button>
             <a href="<?php echo base_url('admin') ?>" class="flex ms-2 md:me-24">
-               <h1 class="text-center text-2xl text-white"><b>S'Library</b></h1>
+               <h1 class="text-center text-2xl text-white"><b>L'Binusa</b></h1>
             </a>
          </div>
          <div class="flex items-center">

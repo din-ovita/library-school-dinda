@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class admin extends CI_Controller
 {
     public function __construct()
@@ -11,7 +14,6 @@ class admin extends CI_Controller
         $this->load->helper('url');
         $this->load->library('session');
         $this->load->library('upload');
-        $this->load->library('excel');
         $login = $this->session->userdata('login_admin');
         $role = $this->session->userdata('role');
         if ($login != 'login' && $role != 'admin') {
@@ -56,12 +58,41 @@ class admin extends CI_Controller
     }
 
     // RAK BUKU
-    public function rak_buku()
+    public function rak_buku($page = 1)
     {
         $data = [
             'menu' => 'rak'
         ];
-        $data['rak'] = $this->m_admin->get('table_rak');
+        $per_page = 10;
+        $data['rak'] = $this->m_admin->get_items($per_page, $per_page * ($page - 1), 'table_rak');
+
+        $total_rows = $this->m_admin->count_items('table_rak');
+        $config['base_url'] = base_url('admin/rak_buku');
+        $config['total_rows'] = $total_rows;
+        $config['per_page'] = $per_page;
+        $config['uri_segment'] = 3;
+        $config['num_links'] = 2;
+        $config['use_page_numbers'] = TRUE;
+        $config['full_tag_open'] = "<ul class='pagination'>";
+        $config['full_tag_close'] = "</ul>";
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+        $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open'] = "<li>";
+        $config['next_tagl_close'] = "</li>";
+        $config['prev_tag_open'] = "<li>";
+        $config['prev_tagl_close'] = "</li>";
+        $config['first_tag_open'] = "<li>";
+        $config['first_tagl_close'] = "</li>";
+        $config['last_tag_open'] = "<li>";
+        $config['last_tagl_close'] = "</li>";
+
+
+        $this->load->library('pagination');
+        $this->pagination->initialize($config);
+
+        $data['pagination_links'] = $this->pagination->create_links();
         $this->load->view('admin/rak/rak', $data);
     }
 
@@ -125,12 +156,41 @@ class admin extends CI_Controller
         echo json_encode($result);
     }
 
-    public function kategori_buku()
+    public function kategori_buku($page = 1)
     {
         $data = [
             'menu' => 'kategori'
         ];
-        $data['kategori'] = $this->m_admin->get('table_kategori');
+        $per_page = 10;
+        $data['kategori'] = $this->m_admin->get_items($per_page, $per_page * ($page - 1), 'table_kategori');
+
+        $total_rows = $this->m_admin->count_items('table_kategori');
+        $config['base_url'] = base_url('admin/kategori_buku');
+        $config['total_rows'] = $total_rows;
+        $config['per_page'] = $per_page;
+        $config['uri_segment'] = 3;
+        $config['num_links'] = 2;
+        $config['use_page_numbers'] = TRUE;
+        $config['full_tag_open'] = "<ul class='pagination'>";
+        $config['full_tag_close'] = "</ul>";
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+        $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open'] = "<li>";
+        $config['next_tagl_close'] = "</li>";
+        $config['prev_tag_open'] = "<li>";
+        $config['prev_tagl_close'] = "</li>";
+        $config['first_tag_open'] = "<li>";
+        $config['first_tagl_close'] = "</li>";
+        $config['last_tag_open'] = "<li>";
+        $config['last_tagl_close'] = "</li>";
+
+
+        $this->load->library('pagination');
+        $this->pagination->initialize($config);
+
+        $data['pagination_links'] = $this->pagination->create_links();
         $data['rak'] = $this->m_admin->get('table_rak');
         $this->load->view('admin/kategori/kategori', $data);
     }
@@ -186,12 +246,42 @@ class admin extends CI_Controller
     // END KATEGORI BUKU
 
     // BUKU
-    public function buku()
+    public function buku($page = 1)
     {
         $data = [
             'menu' => 'buku',
-            'buku' => $this->m_admin->get('table_buku')
         ];
+        $per_page = 10;
+        $data['buku'] = $this->m_admin->get_items($per_page, $per_page * ($page - 1), 'table_buku');
+
+        $total_rows = $this->m_admin->count_items('table_buku');
+        $config['base_url'] = base_url('admin/buku');
+        $config['total_rows'] = $total_rows;
+        $config['per_page'] = $per_page;
+        $config['uri_segment'] = 3;
+        $config['num_links'] = 2;
+        $config['use_page_numbers'] = TRUE;
+        $config['full_tag_open'] = "<ul class='pagination'>";
+        $config['full_tag_close'] = "</ul>";
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+        $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open'] = "<li>";
+        $config['next_tagl_close'] = "</li>";
+        $config['prev_tag_open'] = "<li>";
+        $config['prev_tagl_close'] = "</li>";
+        $config['first_tag_open'] = "<li>";
+        $config['first_tagl_close'] = "</li>";
+        $config['last_tag_open'] = "<li>";
+        $config['last_tagl_close'] = "</li>";
+
+
+        $this->load->library('pagination');
+        $this->pagination->initialize($config);
+
+        $data['pagination_links'] = $this->pagination->create_links();
+
         $this->load->view('admin/buku/buku', $data);
     }
 
@@ -316,7 +406,6 @@ class admin extends CI_Controller
         redirect(base_url('admin/detail_buku/' . $id_buku));
     }
 
-
     public function detail_buku($id)
     {
         $data = [
@@ -359,12 +448,42 @@ class admin extends CI_Controller
     // END BUKU
 
     // ANGGOTA
-    public function anggota()
+    public function anggota($page = 1)
     {
         $data = [
             'menu' => 'anggota',
-            'anggota' => $this->m_admin->get('table_member')
         ];
+        $per_page = 10;
+        $data['anggota'] = $this->m_admin->get_items($per_page, $per_page * ($page - 1), 'table_member');
+
+        $total_rows = $this->m_admin->count_items('table_member');
+        $config['base_url'] = base_url('admin/anggota');
+        $config['total_rows'] = $total_rows;
+        $config['per_page'] = $per_page;
+        $config['uri_segment'] = 3;
+        $config['num_links'] = 2;
+        $config['use_page_numbers'] = TRUE;
+        $config['full_tag_open'] = "<ul class='pagination'>";
+        $config['full_tag_close'] = "</ul>";
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+        $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open'] = "<li>";
+        $config['next_tagl_close'] = "</li>";
+        $config['prev_tag_open'] = "<li>";
+        $config['prev_tagl_close'] = "</li>";
+        $config['first_tag_open'] = "<li>";
+        $config['first_tagl_close'] = "</li>";
+        $config['last_tag_open'] = "<li>";
+        $config['last_tagl_close'] = "</li>";
+
+
+        $this->load->library('pagination');
+        $this->pagination->initialize($config);
+
+        $data['pagination_links'] = $this->pagination->create_links();
+
         $this->load->view('admin/anggota/anggota', $data);
     }
 
@@ -413,230 +532,212 @@ class admin extends CI_Controller
 
     public function tambah_member_by_excel()
     {
+
         require_once FCPATH . 'vendor/autoload.php';
-        if (isset($_FILES["fileExcel"]["name"])) {
-            $path = $_FILES["fileExcel"]["tmp_name"];
+
+        if (isset($_FILES["file"]["name"])) {
+            $path = $_FILES["file"]["tmp_name"];
             $object = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+
+            $data_to_insert = [];
+            $member = [];
+
             foreach ($object->getWorksheetIterator() as $worksheet) {
                 $highestRow = $worksheet->getHighestRow();
+
                 for ($row = 4; $row <= $highestRow; $row++) {
-                    $username = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
-                    $email = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
-                    $nama_depan = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
-                    $nama_belakang = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
-                    $temp_data[] = array(
-                        'username' => $username,
-                        'email' => $email,
-                        'nama_depan'    => $nama_depan,
-                        'nama_belakang'    => $nama_belakang,
-                        'image' => 'user_picture.jpg',
-                        'password' => md5('preSent12'),
-                        'role' => 'karyawan'
-                    );
+                    $nis = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+                    $nama = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
+
+                    $data_to_insert[] = [
+                        'username' => $nama,
+                        'password' => md5($nis),
+                        'role'     => 'member',
+                    ];
+
+                    $member[] = [
+                        'nama' => $nama,
+                        'nis' => $nis,
+                    ];
                 }
             }
-            $this->m_user->insert($temp_data);
+
+            if (!empty($data_to_insert)) {
+                $inserted_ids = array();
+
+                foreach ($data_to_insert as $data) {
+                    $this->db->insert('table_level', $data);
+                    $inserted_ids[] = $this->db->insert_id();
+                }
+
+                foreach ($member as &$m) {
+                    $m['id_level'] = array_shift($inserted_ids);
+                }
+
+                $this->db->insert_batch('table_member', $member);
+
+                $this->session->set_flashdata('success', 'Berhasil upload anggota!');
+                redirect(base_url('admin/anggota'));
+            } else {
+                echo 'No data to insert.';
+            }
+        } else {
+            echo 'File not uploaded.';
+            $this->session->set_flashdata('error', 'Gagal upload anggota!');
+            redirect(base_url('admin/anggota'));
         }
     }
 
-    // public function import_karyawan()
-    // {
-    //     require_once FCPATH . 'vendor/autoload.php';
-    //     if (isset($_FILES["fileExcel"]["name"])) {
-    //         $path = $_FILES["fileExcel"]["tmp_name"];
-    //         $object = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
-    //         foreach ($object->getWorksheetIterator() as $worksheet) {
-    //             $highestRow = $worksheet->getHighestRow();
-    //             for ($row = 4; $row <= $highestRow; $row++) {
-    //                 $username = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
-    //                 $email = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
-    //                 $nama_depan = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
-    //                 $nama_belakang = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
-    //                 $temp_data[] = array(
-    //                     'username' => $username,
-    //                     'email' => $email,
-    //                     'nama_depan'    => $nama_depan,
-    //                     'nama_belakang'    => $nama_belakang,
-    //                     'image' => 'user_picture.jpg',
-    //                     'password' => md5('preSent12'),
-    //                     'role' => 'karyawan'
-    //                 );
-    //             }
-    //         }
-    //         $this->m_user->insert($temp_data);
-    //         $this->session->set_flashdata('sukses', 'Employee data added successfully');
-    //         redirect(base_url('admin/data_karyawan'));
-    //     }
-    // }
+    public function export_anggota()
+    {
+        require_once FCPATH . 'vendor/autoload.php';
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
-    // public function upload_nilai_sumatif()
-    // {
-    //     $jenis = $this->input->post('jenis_nilai');
-    //     $this->load->library('excel');
-    //     $temp_data = [];
-    //     $data = [];
+        $style_col = [
+            'font' => ['bold' => true],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+            'borders' => [
+                'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+                'right' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+                'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+                'left' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+            ]
+        ];
 
-    //     $add_sumatif_rapor = [];
-    //     $up_sumatif_rapor = [];
+        $style_row = [
+            'alignment' => [
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+            ],
+            'borders' => [
+                'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+                'right' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+                'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+                'left' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN],
+            ]
+        ];
 
-    //     $add_sumatif = [];
-    //     $up_sumatif = [];
+        $sheet->setCellValue('A1', "DATA ANGGOTA PERPUSTAKAAN SMK BINUSA");
+        $sheet->mergeCells('A1:C1');
+        $sheet->getStyle('A1')->getFont()->setBold(true);
 
-    //     if ($jenis === 'NILAI_SUMATIF') {
-    //         $path = $_FILES["file"]["tmp_name"];
-    //         $objPHPExcel = PHPExcel_IOFactory::load($path);
+        $sheet->setCellValue('A3', "NO");
+        $sheet->setCellValue('B3', "NAMA");
+        $sheet->setCellValue('C3', "NIS");
 
-    //         $sheet = $objPHPExcel->getActiveSheet();
-    //         $mapel = $sheet->getCell('C3')->getValue();
-    //         $kelas = $sheet->getCell('C7')->getValue();
-    //         $semester = $sheet->getCell('C5')->getValue();
-    //         $guru = $sheet->getCell('C6')->getValue();
-    //         $jmlPenilaian = $sheet->getCell('J10')->getValue();
-    //         $array = explode(' ', $kelas);
+        $sheet->getStyle('A3')->applyFromArray($style_col);
+        $sheet->getStyle('B3')->applyFromArray($style_col);
+        $sheet->getStyle('C3')->applyFromArray($style_col);
 
-    //         $col = 3;
-    //         $target_capaian = $this->m_nilai->get_targetcapaian_bykelas_limit($array[1], tampil_id_mapel($mapel), $jmlPenilaian);
+        $member = $this->m_admin->get('table_member');
 
-    //         foreach ($target_capaian as $target) {
-    //             $batas_c = $sheet->getCell(PHPExcel_Cell::stringFromColumnIndex($col) . '5')->getValue();
-    //             $batas_b = $sheet->getCell(PHPExcel_Cell::stringFromColumnIndex($col) . '6')->getValue();
-    //             $batas_sb = $sheet->getCell(PHPExcel_Cell::stringFromColumnIndex($col) . '7')->getValue();
-    //             for ($i = 12; $i <= $sheet->getHighestRow(); $i++) {
-    //                 $nilaisumatif = $sheet->getCell(PHPExcel_Cell::stringFromColumnIndex($col) . $i)->getValue();
-    //                 $nisn = $sheet->getCell('C' . $i)->getValue();
+        $no = 1;
+        $numrow = 4;
 
-    //                 $id_siswa = tampil_idSiswa_bynisn($nisn);
-    //                 $id_kelas = $array[1];
+        foreach ($member as $data) {
+            $sheet->setCellValue('A' . $numrow, $no);
+            $sheet->setCellValue('B' . $numrow, $data->nama);
+            $sheet->setCellValue('C' . $numrow, $data->nis);
 
-    //                 $tujuan = '';
-    //                 if ($nilaisumatif <= $batas_c) {
-    //                     $tujuan = 'Kurang';
-    //                 } else if ($nilaisumatif <= $batas_b) {
-    //                     $tujuan = 'Cukup';
-    //                 } else if ($nilaisumatif <= $batas_sb) {
-    //                     $tujuan = 'Baik';
-    //                 } else {
-    //                     $tujuan = 'Sangat Baik';
-    //                 }
+            $sheet->getStyle('A' . $numrow)->applyFromArray($style_row);
+            $sheet->getStyle('B' . $numrow)->applyFromArray($style_row);
+            $sheet->getStyle('C' . $numrow)->applyFromArray($style_row);
 
-    //                 if (empty(tampil_id_nilai_sumatif($id_siswa, $target->id_target, $id_kelas))) {
-    //                     array_push(
-    //                         $add_sumatif,
-    //                         [
-    //                             'id_siswa' => $id_siswa,
-    //                             'id_kelas' => $id_kelas,
-    //                             'id_mapel' => tampil_id_mapel($mapel),
-    //                             'id_semester' => tampil_id_semester($semester),
-    //                             'nilai' => $nilaisumatif,
-    //                             'id_target' => $target->id_target,
-    //                             'kode_guru' => tampil_kode_guru($guru),
-    //                             'tujuan' => $tujuan
-    //                         ]
-    //                     );
-    //                 } else {
-    //                     array_push(
-    //                         $up_sumatif,
-    //                         [
-    //                             'id_siswa' => $id_siswa,
-    //                             'id_kelas' => $id_kelas,
-    //                             'id_mapel' => tampil_id_mapel($mapel),
-    //                             'id_semester' => tampil_id_semester($semester),
-    //                             'nilai' => $nilaisumatif,
-    //                             'id_nilai' => tampil_id_nilai_sumatif($id_siswa, $target->id_target, $id_kelas),
-    //                             'id_target' => $target->id_target,
-    //                             'kode_guru' => tampil_kode_guru($guru),
-    //                             'tujuan' => $tujuan
-    //                         ]
-    //                     );
-    //                 }
+            $no++;
+            $numrow++;
+        }
 
-    //             }
-    //             $col++;
-    //         }
+        $sheet->getColumnDimension('A')->setWidth(5);
+        $sheet->getColumnDimension('B')->setWidth(35);
+        $sheet->getColumnDimension('C')->setWidth(15);
 
-    //         $this->session->set_flashdata('sukses', 'Data berhasil ditambahkan');
-    //         $this->m_nilai->nilai_sumatif($add_sumatif, $up_sumatif);
+        $sheet->getDefaultRowDimension()->setRowHeight(-1);
 
-    //         redirect(base_url('nilai/upload_nilai'));
-    //     } else {
-    //         $path = $_FILES["file"]["tmp_name"];
-    //         $objPHPExcel = PHPExcel_IOFactory::load($path);
+        $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
 
-    //         $sheet = $objPHPExcel->getActiveSheet();
-    //         $mapel = $sheet->getCell('D3')->getValue();
-    //         $kelas = $sheet->getCell('D6')->getValue();
-    //         $semester = $sheet->getCell('D5')->getValue();
-    //         $array = explode(' ', $kelas);
+        $sheet->setTitle('DATA ANGGOTA');
 
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="data_anggota.xlsx"');
+        header('Cache-Control: max-age=0');
 
-    //         for ($i = 10; $i <= $sheet->getHighestRow(); $i++) {
-    //             $nisn = $sheet->getCell('C' . $i)->getValue();
-    //             $sumatifakhir = $sheet->getCell('D' . $i)->getValue();
-    //             if (empty(tampil_sumatif_akhir($array[1], tampil_id_semester($semester), tampil_idSiswa_bynisn($nisn), tampil_id_mapel($mapel)))) {
-    //                 array_push(
-    //                     $temp_data,
-    //                     [
-    //                         'id_siswa' => tampil_idSiswa_bynisn($nisn),
-    //                         'id_mapel' => tampil_id_mapel($mapel),
-    //                         'id_semester' => tampil_id_semester($semester),
-    //                         'sumatifakhir' => $sumatifakhir,
-    //                         'id_kelas' => $array[1]
-    //                     ]
-    //                 );
-    //             } else {
-    //                 array_push($data, [
-    //                     'id_siswa' => tampil_idSiswa_bynisn($nisn),
-    //                     'id_mapel' => tampil_id_mapel($mapel),
-    //                     'id_semester' => tampil_id_semester($semester),
-    //                     'sumatifakhir' => $sumatifakhir,
-    //                     'id_kelas' => $array[1],
-    //                     'id_sumatif_akhir' => tampil_sumatif_akhir($array[1], tampil_id_semester($semester), tampil_idSiswa_bynisn($nisn), tampil_id_mapel($mapel))
-    //                 ]);
-    //             }
-
-    //             $nama_column = '';
-    //             $cek_data_nilai = $this->m_nilai->getwhere('tabel_sumatif_akhir_raport', ['id_siswa' => tampil_idSiswa_bynisn($nisn)])->num_rows();
-    //             if (tampil_idTingkatById($array[1]) == '1' && tampil_id_semester($semester) == '1') {
-    //                 $nama_column = 'sumatifakhir1';
-    //             } else if (tampil_idTingkatById($array[1]) == '1' && tampil_id_semester($semester) == '2') {
-    //                 $nama_column = 'sumatifakhir2';
-    //             } else if (tampil_idTingkatById($array[1]) == '2' && tampil_id_semester($semester) == '1') {
-    //                 $nama_column = 'sumatifakhir3';
-    //             } else if (tampil_idTingkatById($array[1]) == '2' && tampil_id_semester($semester) == '2') {
-    //                 $nama_column = 'sumatifakhir4';
-    //             } else if (tampil_idTingkatById($array[1]) == '3' && tampil_id_semester($semester) == '1') {
-    //                 $nama_column = 'sumatifakhir5';
-    //             } else if (tampil_idTingkatById($array[1]) == '3' && tampil_id_semester($semester) == '2') {
-    //                 $nama_column = 'sumatifakhir6';
-    //             }
-
-    //             if ($cek_data_nilai == null) {
-    //                 array_push($add_sumatif_rapor, [
-    //                     'id_kelas_sekarang' => $array[1],
-    //                     'id_siswa' => tampil_idSiswa_bynisn($nisn),
-    //                     'id_mapel' => tampil_id_mapel($mapel),
-    //                     $nama_column => $sumatifakhir,
-    //                 ]);
-    //             } else {
-    //                 array_push($up_sumatif_rapor, [
-    //                     'id_kelas_sekarang' => $array[1],
-    //                     $nama_column => $sumatifakhir,
-    //                     'id_sumatif_akhir' => tampil_sumatif_akhir_rapor($array[1], tampil_idSiswa_bynisn($nisn), tampil_id_mapel($mapel))
-    //                 ]);
-    //             }
-    //         }
-
-    //         $this->m_nilai->nilai_sumatif_akhir($temp_data, $data);
-    //         $this->m_nilai->nilai_sumatif_akhir_rapor($add_sumatif_rapor, $up_sumatif_rapor);
-
-    //         $this->session->set_flashdata('sukses', 'Data berhasil ditambahkan');
-
-    //         redirect(base_url('nilai/upload_nilai'));
-    //     }
-    // }
-
-
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+    }
     // END ANGGOTA
 
     // PEMINJAMAN
+    public function peminjaman_buku($page = 1)
+    {
+        $data = [
+            'menu' => 'peminjaman',
+        ];
+        $per_page = 10;
+        $data['peminjaman'] = $this->m_admin->get_items($per_page, $per_page * ($page - 1), 'table_peminjaman');
+
+        $total_rows = $this->m_admin->count_items('table_peminjaman');
+        $config['base_url'] = base_url('admin/peminjaman_buku');
+        $config['total_rows'] = $total_rows;
+        $config['per_page'] = $per_page;
+        $config['uri_segment'] = 3;
+        $config['num_links'] = 2;
+        $config['use_page_numbers'] = TRUE;
+        $config['full_tag_open'] = "<ul class='pagination'>";
+        $config['full_tag_close'] = "</ul>";
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+        $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open'] = "<li>";
+        $config['next_tagl_close'] = "</li>";
+        $config['prev_tag_open'] = "<li>";
+        $config['prev_tagl_close'] = "</li>";
+        $config['first_tag_open'] = "<li>";
+        $config['first_tagl_close'] = "</li>";
+        $config['last_tag_open'] = "<li>";
+        $config['last_tagl_close'] = "</li>";
+
+
+        $this->load->library('pagination');
+        $this->pagination->initialize($config);
+
+        $data['pagination_links'] = $this->pagination->create_links();
+
+        $this->load->view('admin/peminjaman/peminjaman', $data);
+    }
+
+    public function tambah_peminjaman_buku()
+    {
+        $index = $this->acak(6);
+
+        $data = [
+            'menu' => 'peminjaman',
+            'member' => $this->m_admin->get('table_member'),
+            'buku' => $this->m_admin->get('table_buku'),
+            'nis_member' => $this->input->post('member')
+        ];
+
+        $index_pinjam = 'IP-' . $index;
+
+        $tgl_kembali = date('Y-m-d', strtotime('+6 days'));
+
+        if ($data['nis_member'] != '') {
+            $peminjaman_data = [
+                'index_pinjam' => $index_pinjam,
+                'nis' => $data['nis_member'],
+                'tgl_kembali' => $tgl_kembali
+            ];
+
+            $index_pinjam = $this->m_admin->tambah_index_pinjam($peminjaman_data);
+            $data['index_pinjam'] = $this->m_admin->getwhere('tabel_index_pinjam', ['id' => $index_pinjam])->result();
+        }
+
+
+        $this->load->view('admin/peminjaman/tambah_peminjaman', $data);
+    }
+
+    // END PEMINJAMAN
 }

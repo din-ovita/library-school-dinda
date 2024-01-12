@@ -7,6 +7,7 @@
     <title>L'Binusa</title>
     <?php $this->load->view('style/head') ?>
 </head>
+
 <style>
     .pagination {
         display: flex;
@@ -37,15 +38,15 @@
     <?php $this->load->view('style/sidebar') ?>
     <div class="p-4 sm:ml-64 bg-gray-100 min-h-screen font-popins">
         <div class="mt-14 flex justify-between">
-            <h1 class="text-xl font-semibold">Buku</h1>
+            <h1 class="text-xl font-semibold">Peminjaman Buku</h1>
             <ul class="flex gap-2">
-                <li class=""> Buku</li>
+                <li class=""> Peminjaman</li>
             </ul>
         </div>
         <div class="bg-white p-5 mt-5 ">
             <div class="flex justify-between">
                 <div></div>
-                <a href="<?= base_url('admin/tambah_buku') ?>">
+                <a href="<?= base_url('admin/tambah_peminjaman_buku') ?>">
                     <button class="block text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-sky-600 rounded-lg" type="button">
                         <i class="fas fa-plus"></i>
                         Tambah </button>
@@ -59,19 +60,16 @@
                                 No
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Rak
+                                No Peminjaman
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Kategori Buku
+                                Nama Peminjam
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Judul Buku
+                                Tanggal Pinjam
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Cover Buku
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Jumlah Buku
+                                Tanggal Kembali
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Aksi
@@ -79,15 +77,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if ($buku) : ?>
+                        <?php if ($peminjaman) : ?>
                             <?php $no = 0;
-                            foreach ($buku as $row) : $no++ ?>
+                            foreach ($peminjaman as $row) : $no++ ?>
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         <?php echo $no ?>
                                     </th>
-                                    <td class="px-6 py-4">
-                                        <?php echo namaRak_byKategori($row->id_kategori) ?>
+                                    <!-- <td class="px-6 py-4">
+                                        <?php echo tam($row->id_kategori) ?>
                                     </td>
                                     <td class="px-6 py-4">
                                         <?php echo tampil_nama_kategori($row->id_kategori) ?>
@@ -119,8 +117,7 @@
                                         <button type="button" class="ml-2 text-white bg-red-500 hover:bg-red-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1" onclick="hapus(<?php echo $row->id_buku ?>)">
                                             <i class="text-base sm:text-lg fas fa-trash"></i>
                                         </button>
-                                    </td>
-
+                                    </td> -->
                                 </tr>
                             <?php endforeach ?>
                         <?php else : ?>
@@ -144,7 +141,7 @@
         function hapus(id) {
             var yes = confirm('Anda Yakin Untuk Menghapus?');
             if (yes == true) {
-                window.location.href = "<?php echo base_url('admin/hapus_buku/') ?>" + id;
+                window.location.href = "<?php echo base_url('admin/hapus_peminjaman/') ?>" + id;
             }
         }
     </script>

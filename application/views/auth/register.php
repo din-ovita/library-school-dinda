@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S'Library</title>
+    <title>L'Binusa</title>
     <?php $this->load->view('style/head') ?>
 </head>
 
@@ -12,7 +12,7 @@
     <section class="grid grid-cols-3 font-popins">
         <div class="flex items-center justify-center">
             <div>
-                <h1 class="text-center text-4xl text-primary"><b>S'Library</b></h1>
+                <h1 class="text-center text-4xl text-primary"><b>L'Binusa</b></h1>
                 <form action="<?php echo base_url('register/aksi_register') ?>" method="POST" class="mb-4 mt-12">
                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
                     <div class="relative mb-4">

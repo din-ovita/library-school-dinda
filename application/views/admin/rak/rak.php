@@ -4,13 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S'Library</title>
+    <title>L'Binusa</title>
     <?php $this->load->view('style/head') ?>
 </head>
+<style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 0.5em auto;
+        list-style: none;
+    }
+
+    .pagination a,
+    .pagination li.active a {
+        border: 1px solid silver;
+        padding: 0.1em 0.5em;
+        border-radius: 10px;
+        color: black;
+        margin-right: 0.5em;
+        text-decoration: none;
+    }
+
+    .pagination a:hover,
+    .pagination li.active a {
+        border: 1px solid rgb(14 165 233);
+        background-color: rgb(14 165 233);
+        color: white;
+    }
+</style>
 
 <body>
     <?php $this->load->view('style/sidebar') ?>
-    <div class="p-4 sm:ml-64 bg-gray-100  min-h-screen font-popins">
+    <div class="p-4 sm:ml-64 bg-gray-100 min-h-screen font-popins">
         <div class="mt-14 flex justify-between">
             <h1 class="text-xl font-semibold">Rak Buku</h1>
             <ul class="flex gap-2">
@@ -61,6 +86,10 @@
                     </tbody>
                 </table>
             </div>
+            <div class="pagination">
+                <?php echo $pagination_links; ?>
+            </div>
+
         </div>
 
 
