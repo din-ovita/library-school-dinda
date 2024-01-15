@@ -670,15 +670,20 @@ class admin extends CI_Controller
     // END ANGGOTA
 
     // PEMINJAMAN
+    function jumlah_buku()
+    {
+        echo jumlah_buku_tersedia($this->input->post('id_buku'));
+    }
+
     public function peminjaman_buku($page = 1)
     {
         $data = [
             'menu' => 'peminjaman',
         ];
         $per_page = 10;
-        $data['peminjaman'] = $this->m_admin->get_items($per_page, $per_page * ($page - 1), 'table_peminjaman');
+        $data['peminjaman'] = $this->m_admin->get_items_where($per_page, $per_page * ($page - 1), 'tabel_index_pinjam', ['konfirmasi_kembali' => 'not']);
 
-        $total_rows = $this->m_admin->count_items('table_peminjaman');
+        $total_rows = $this->m_admin->count_items('tabel_index_pinjam');
         $config['base_url'] = base_url('admin/peminjaman_buku');
         $config['total_rows'] = $total_rows;
         $config['per_page'] = $per_page;
@@ -711,33 +716,281 @@ class admin extends CI_Controller
 
     public function tambah_peminjaman_buku()
     {
-        $index = $this->acak(6);
-
         $data = [
             'menu' => 'peminjaman',
+            'index' => 'IP-' . $this->acak(6),
+            'tgl_pinjam' => date('Y-m-d'),
+            'tgl_kembali' => date('Y-m-d', strtotime('+6 days')),
             'member' => $this->m_admin->get('table_member'),
             'buku' => $this->m_admin->get('table_buku'),
-            'nis_member' => $this->input->post('member')
         ];
-
-        $index_pinjam = 'IP-' . $index;
-
-        $tgl_kembali = date('Y-m-d', strtotime('+6 days'));
-
-        if ($data['nis_member'] != '') {
-            $peminjaman_data = [
-                'index_pinjam' => $index_pinjam,
-                'nis' => $data['nis_member'],
-                'tgl_kembali' => $tgl_kembali
-            ];
-
-            $index_pinjam = $this->m_admin->tambah_index_pinjam($peminjaman_data);
-            $data['index_pinjam'] = $this->m_admin->getwhere('tabel_index_pinjam', ['id' => $index_pinjam])->result();
-        }
-
-
-        $this->load->view('admin/peminjaman/tambah_peminjaman', $data);
+        $this->load->view('admin/peminjaman/tambah_peminjaman_buku', $data);
     }
 
+    public function aksi_tambah_peminjaman_buku()
+    {
+        $index = $this->input->post('index');
+        $tgl_pinjam = $this->input->post('tgl_pinjam');
+        $tgl_kembali = $this->input->post('tgl_kembali');
+        $member = $this->input->post('member');
+        $buku = $this->input->post('buku');
+        $jumlah = $this->input->post('jumlah');
+
+        $index_pinjam = [
+            'index_pinjam' => $index,
+            'tgl_pinjam' => $tgl_pinjam,
+            'tgl_kembali' => $tgl_kembali,
+            'nis' => $member,
+            'konfirmasi_pinjam' => 'yes'
+        ];
+
+        $add_index_pinjam = $this->m_admin->tambah_index_pinjam($index_pinjam);
+
+        if ($add_index_pinjam) {
+            $books = $this->m_admin->peminjaman(['id_buku' => $buku, 'status' => 'tersedia'], $jumlah);
+
+            $data = [];
+            $status = [];
+
+            foreach ($books as $row) {
+                $data[] = [
+                    'index_buku' => $row->index_buku,
+                    'index_pinjam' => index_pinjam($add_index_pinjam),
+                    'nis' => $member
+                ];
+
+                $status[] = [
+                    'index_buku' => $row->index_buku,
+                    'status' => 'dipinjam',
+                    'id' => $row->id
+                ];
+            }
+
+            $this->db->insert_batch('table_peminjaman', $data);
+            $this->db->update_batch('tabel_id_buku', $status, 'id');
+
+            $this->session->set_flashdata('success', 'Tambah peminjaman berhasil!');
+            redirect(base_url('admin/tambah_buku_dipinjam/' . index_pinjam($add_index_pinjam)));
+        } else {
+            $this->session->set_flashdata('error', 'Tambah peminjaman gagal!');
+            redirect(base_url('admin/tambah_peminjaman_buku'));
+        }
+    }
+
+    public function tambah_buku_dipinjam($id)
+    {
+        $data = [
+            'menu' => 'peminjaman',
+            'index' => $this->m_admin->getwhere('tabel_index_pinjam', ['index_pinjam' => $id])->result(),
+            'buku' => $this->m_admin->get('table_buku'),
+            'peminjaman' => $this->m_admin->getwhere('table_peminjaman', ['index_pinjam' => $id])->result(),
+        ];
+        $this->load->view('admin/peminjaman/tambah_buku_dipinjam', $data);
+    }
+
+    public function aksi_tambah_buku_dipinjam()
+    {
+        $index = $this->input->post('index');
+        $member = $this->input->post('member');
+        $buku = $this->input->post('buku');
+        $jumlah = $this->input->post('jumlah');
+
+        $books = $this->m_admin->peminjaman(['id_buku' => $buku, 'status' => 'tersedia'], $jumlah);
+
+        $data = [];
+        $status = [];
+
+        foreach ($books as $row) {
+            $data[] = [
+                'index_buku' => $row->index_buku,
+                'index_pinjam' => $index,
+                'nis' => $member
+            ];
+
+            $status[] = [
+                'index_buku' => $row->index_buku,
+                'status' => 'dipinjam',
+                'id' => $row->id
+            ];
+        }
+
+        $add = $this->db->insert_batch('table_peminjaman', $data);
+        if ($add) {
+            $this->db->update_batch('tabel_id_buku', $status, 'id');
+            $this->session->set_flashdata('success', 'Tambah peminjaman berhasil!');
+            redirect(base_url('admin/tambah_buku_dipinjam/' . $index));
+        } else {
+            $this->session->set_flashdata('error', 'Tambah peminjaman gagal!');
+            redirect(base_url('admin/tambah_buku_dipinjam/' . $index));
+        }
+    }
+
+    public function detail_peminjaman($id)
+    {
+        $data = [
+            'menu' => 'peminjaman',
+            'index' => $this->m_admin->getwhere('tabel_index_pinjam', ['index_pinjam' => $id])->result(),
+            'buku' => $this->m_admin->get('table_buku'),
+            'peminjaman' => $this->m_admin->getwhere('table_peminjaman', ['index_pinjam' => $id])->result(),
+        ];
+        $this->load->view('admin/peminjaman/detail_peminjaman', $data);
+    }
+
+    public function konfirmasi_pinjam($id)
+    {
+        $data = [
+            'index_pinjam' => $id,
+            'konfirmasi_pinjam' => 'yes'
+        ];
+        $konfimasi = $this->m_admin->konfirmasi_peminjaman($data, $id);
+        if ($konfimasi) {
+            $this->session->set_flashdata('success', 'Konfirmasi peminjaman berhasil!');
+            redirect(base_url('admin/peminjaman_buku'));
+        } else {
+            $this->session->set_flashdata('error', 'Konfirmasi peminjaman gagal!');
+            redirect(base_url('admin/peminjaman_buku'));
+        }
+    }
+
+    public function konfirmasi_kembali($id)
+    {
+        $tgl_kembali = tgl_kembali($id);
+        $status = '';
+        $konfirmasi_bayar_denda = '';
+
+        if ($tgl_kembali > date('Y-m-d')) {
+            $status = 'tepat waktu';
+            $konfirmasi_bayar_denda = 'yes';
+        } else {
+            $status = 'telat';
+            $konfirmasi_bayar_denda = 'not';
+        }
+
+        $data = [
+            'index_pinjam' => $id,
+            'konfirmasi_kembali' => 'yes',
+            'tgl_pengembalian' => date('Y-m-d'),
+            'status' => $status,
+            'konfirmasi_bayar_denda' => $konfirmasi_bayar_denda
+        ];
+        $konfimasi = $this->m_admin->konfirmasi_peminjaman($data, $id);
+        if ($konfimasi) {
+            $peminjaman = $this->m_admin->getwhere('table_peminjaman', ['index_pinjam' => $id])->result();
+
+            $data_buku = [];
+
+            foreach ($peminjaman as $row) {
+                $data_buku[] = [
+                    'index_buku' => $row->index_buku,
+                    'status' => 'tersedia'
+                ];
+            }
+
+            $this->db->update_batch('tabel_id_buku', $data_buku, 'index_buku');
+
+            $this->session->set_flashdata('success', 'Konfirmasi pengembalian berhasil!');
+            redirect(base_url('admin/peminjaman_buku'));
+        } else {
+            $this->session->set_flashdata('error', 'Konfirmasi pengembalian gagal!');
+            redirect(base_url('admin/peminjaman_buku'));
+        }
+    }
+
+    public function hapus_peminjaman($id)
+    {
+        $peminjaman = $this->m_admin->getwhere('table_peminjaman', ['index_pinjam' => $id])->result();
+
+        $data_buku = [];
+
+        foreach ($peminjaman as $row) {
+            $data_buku[] = [
+                'index_buku' => $row->index_buku,
+                'status' => 'tersedia'
+            ];
+        }
+
+        $this->db->update_batch('tabel_id_buku', $data_buku, 'index_buku');
+
+        $this->m_admin->delete('tabel_index_pinjam', 'index_pinjam', $id);
+
+        $hapus_pinjam = $this->m_admin->deletewhere('table_peminjaman', ['index_pinjam' => $id]);
+
+        if ($hapus_pinjam) {
+            $this->session->set_flashdata('success', 'Hapus peminjaman berhasil!');
+            redirect(base_url('admin/peminjaman_buku'));
+        } else {
+            $this->session->set_flashdata('error', 'Hapus peminjaman gagal!');
+            redirect(base_url('admin/peminjaman_buku'));
+        }
+    }
     // END PEMINJAMAN
+
+    // PENGEMBALIAN
+    public function pengembalian_buku($page = 1)
+    {
+        $data = [
+            'menu' => 'pengembalian',
+        ];
+        $per_page = 10;
+        $data['pengembalian'] = $this->m_admin->get_items_where($per_page, $per_page * ($page - 1), 'tabel_index_pinjam', ['konfirmasi_kembali' => 'yes']);
+
+        $total_rows = $this->m_admin->count_items('tabel_index_pinjam');
+        $config['base_url'] = base_url('admin/pengembalian_buku');
+        $config['total_rows'] = $total_rows;
+        $config['per_page'] = $per_page;
+        $config['uri_segment'] = 3;
+        $config['num_links'] = 2;
+        $config['use_page_numbers'] = TRUE;
+        $config['full_tag_open'] = "<ul class='pagination'>";
+        $config['full_tag_close'] = "</ul>";
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+        $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open'] = "<li>";
+        $config['next_tagl_close'] = "</li>";
+        $config['prev_tag_open'] = "<li>";
+        $config['prev_tagl_close'] = "</li>";
+        $config['first_tag_open'] = "<li>";
+        $config['first_tagl_close'] = "</li>";
+        $config['last_tag_open'] = "<li>";
+        $config['last_tagl_close'] = "</li>";
+
+
+        $this->load->library('pagination');
+        $this->pagination->initialize($config);
+
+        $data['pagination_links'] = $this->pagination->create_links();
+
+        $this->load->view('admin/pengembalian/pengembalian', $data);
+    }
+
+    public function hapus_pengembalian($id)
+    {
+        $this->m_admin->delete('tabel_index_pinjam', 'index_pinjam', $id);
+
+        $hapus_pinjam = $this->m_admin->deletewhere('table_peminjaman', ['index_pinjam' => $id]);
+
+        if ($hapus_pinjam) {
+            $this->session->set_flashdata('success', 'Hapus pengembalian berhasil!');
+            redirect(base_url('admin/pengembalian'));
+        } else {
+            $this->session->set_flashdata('error', 'Hapus pengembalian gagal!');
+            redirect(base_url('admin/pengembalian'));
+        }
+    }
+
+    public function detail_pengembalian($id)
+    {
+        $data = [
+            'menu' => 'pengembalian',
+            'index' => $this->m_admin->getwhere('tabel_index_pinjam', ['index_pinjam' => $id])->result(),
+            'buku' => $this->m_admin->get('table_buku'),
+            'pengembalian' => $this->m_admin->getwhere('table_peminjaman', ['index_pinjam' => $id])->result(),
+        ];
+        $this->load->view('admin/pengembalian/detail_pengembalian', $data);
+    }
+
+
+    // END PENGEMBALIAN
 }

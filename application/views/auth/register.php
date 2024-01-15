@@ -9,9 +9,9 @@
 </head>
 
 <body>
-    <section class="grid grid-cols-3 font-popins">
-        <div class="flex items-center justify-center">
-            <div>
+    <section class="grid grid-cols-1 sm:grid-cols-3 font-popins">
+        <div class="col-span-1 flex items-center justify-center">
+            <div class="mt-24 sm:mt-0">
                 <h1 class="text-center text-4xl text-primary"><b>L'Binusa</b></h1>
                 <form action="<?php echo base_url('register/aksi_register') ?>" method="POST" class="mb-4 mt-12">
                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
@@ -36,7 +36,7 @@
                 <p class="text-sm text-gray-900 font-medium">Sudah punya akun? Silahkan <a href="<?php echo base_url('login') ?>" class="underline text-primary">Masuk</a></p>
             </div>
         </div>
-        <div class="col-span-2 bg-second">
+        <div class="col-span-2 bg-second hidden sm:block">
             <img src="<?php echo base_url('assets/image/book2.jpg') ?>" alt="register" class="mx-auto h-screen">
         </div>
     </section>

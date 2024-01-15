@@ -13,7 +13,7 @@
     <div class="p-4 sm:ml-64 bg-gray-100 min-h-screen font-popins">
         <div class="mt-14 flex justify-between">
             <h1 class="text-xl font-semibold">Buku</h1>
-            <ul class="flex gap-2">
+            <ul class="flex gap-2 sm:text-base text-sm">
                 <li class="capitalize text-primary"><a href="<?php echo base_url('admin/buku') ?>">Buku</a></li>
                 /<li class=""> Detail Buku</li>
             </ul>
@@ -73,6 +73,8 @@
                                     ID Buku
                                 </th>
                                 <th scope="col" class="px-6 py-3">
+                                    Status </th>
+                                <th scope="col" class="px-6 py-3">
                                     Aksi
                                 </th>
                             </tr>
@@ -90,6 +92,9 @@
                                         </td>
                                         <td class="px-6 py-4">
                                             <?php echo $data->index_buku ?>
+                                        </td>
+                                        <td class="px-6 py-4 capitalize">
+                                            <?php echo $data->status ?>
                                         </td>
                                         <td class="px-6 py-4">
                                             <button type="button" class="ml-2 text-white bg-red-500 hover:bg-red-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1" onclick="hapus(<?php echo $data->id ?>)">

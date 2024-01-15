@@ -26,10 +26,11 @@ class m_admin extends CI_Model
         return $data;
     }
 
-    // public function insert_data($data)
-    // {
-    //     $this->db->insert_batch('table_level', $data);
-    // }
+    public function deletewhere($tabel, $where)
+    {
+        $data = $this->db->delete($tabel, $where);
+        return $data;
+    }
 
     // RAK
     public function tambah_rak($data)
@@ -99,6 +100,14 @@ class m_admin extends CI_Model
         return $query->result();
     }
 
+    public function get_items_where($limit, $offset, $tabel, $where)
+    {
+        $this->db->limit($limit, $offset);
+        $this->db->where($where);
+        $query = $this->db->get($tabel);
+        return $query->result();
+    }
+
     public function count_items($tabel)
     {
         return $this->db->get($tabel)->num_rows();
@@ -109,5 +118,19 @@ class m_admin extends CI_Model
     {
         $this->db->insert('tabel_index_pinjam', $data);
         return $this->db->insert_id();
+    }
+
+    public function peminjaman($where, $limit)
+    {
+        $this->db->where($where);
+        $this->db->limit($limit);
+        $data = $this->db->get('tabel_id_buku');
+        return $data->result();
+    }
+
+    public function konfirmasi_peminjaman($data, $where)
+    {
+        $this->db->update('tabel_index_pinjam', $data, ['index_pinjam' => $where]);
+        return $this->db->affected_rows();
     }
 }

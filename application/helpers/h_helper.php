@@ -1,4 +1,11 @@
 <?php
+
+function convRupiah($value)
+{
+    $float = floatval($value);
+    return 'Rp. ' . number_format($float);
+}
+
 // RAK
 function tampil_nama_rak($id)
 {
@@ -50,6 +57,15 @@ function jumlah_buku($id)
     return $result->num_rows();
 }
 
+function jumlah_buku_tersedia($id)
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $array = ['id_buku' => $id, 'status' => 'tersedia'];
+    $result = $ci->db->where($array)->get('tabel_id_buku');
+    return $result->num_rows();
+}
+
 function judul_buku($id)
 {
     $ci = &get_instance();
@@ -94,6 +110,24 @@ function idBuku_byIndex($id)
     }
 }
 
+function judulBuku_byIndex($id)
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $judul = '';
+    $result = $ci->db->select('*')
+        ->from('tabel_id_buku')
+        ->join('table_buku', 'tabel_id_buku.id_buku = table_buku.id_buku')
+        ->where('tabel_id_buku.index_buku', $id)
+        ->get();
+    foreach ($result->result() as $c) {
+        $stmt = $c->nama_buku;
+        $judul = $judul . $stmt;
+    }
+    return $judul;
+}
+
+
 // END BUKU
 
 // ANGGOTA
@@ -124,5 +158,28 @@ function nama_byNis($id)
         return $stmt;
     }
 }
-
 // END ANGGOTA
+
+// PEMINJAMAN
+function index_pinjam($id)
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $result = $ci->db->where('id', $id)->get('tabel_index_pinjam');
+    foreach ($result->result() as $c) {
+        $stmt = $c->index_pinjam;
+        return $stmt;
+    }
+}
+
+function tgl_kembali($id)
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $result = $ci->db->where('index_pinjam', $id)->get('tabel_index_pinjam');
+    foreach ($result->result() as $c) {
+        $stmt = $c->tgl_kembali;
+        return $stmt;
+    }
+}
+// END PEMINJAMAN

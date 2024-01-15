@@ -13,7 +13,7 @@
     <div class="p-4 sm:ml-64 bg-gray-100 min-h-screen font-popins">
         <div class="mt-14 flex justify-between">
             <h1 class="text-xl font-semibold">Edit Buku</h1>
-            <ul class="flex gap-2">
+            <ul class="flex gap-2 sm:text-base text-sm">
                 <li class="capitalize text-primary"><a href="<?php echo base_url('admin/buku') ?>">Buku</a></li>
                 /<li class=""> Edit Buku</li>
             </ul>

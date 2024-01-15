@@ -38,7 +38,7 @@
     <div class="p-4 sm:ml-64 bg-gray-100 min-h-screen font-popins">
         <div class="mt-14 flex justify-between">
             <h1 class="text-xl font-semibold">Buku</h1>
-            <ul class="flex gap-2">
+            <ul class="flex gap-2 sm:text-base text-sm">
                 <li class=""> Buku</li>
             </ul>
         </div>
@@ -73,7 +73,7 @@
                             <th scope="col" class="px-6 py-3">
                                 Jumlah Buku
                             </th>
-                            <th scope="col" class="px-6 py-3">
+                            <th scope="col" class="px-6 py-3 text-center">
                                 Aksi
                             </th>
                         </tr>

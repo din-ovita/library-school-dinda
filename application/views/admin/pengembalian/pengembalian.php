@@ -38,20 +38,13 @@
     <?php $this->load->view('style/sidebar') ?>
     <div class="p-4 sm:ml-64 bg-gray-100 min-h-screen font-popins">
         <div class="mt-14 flex justify-between">
-            <h1 class="text-xl font-semibold">Peminjaman Buku</h1>
+            <h1 class="text-xl font-semibold">Pengembalian Buku</h1>
             <ul class="flex gap-2 sm:text-base text-sm">
-                <li class=""> Peminjaman</li>
+                <li class=""> Pengembalian</li>
             </ul>
         </div>
         <div class="bg-white p-5 mt-5 ">
-            <div class="flex justify-between">
-                <div></div>
-                <a href="<?= base_url('admin/tambah_peminjaman_buku') ?>">
-                    <button class="block text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-sky-600 rounded-lg" type="button">
-                        <i class="fas fa-plus"></i>
-                        Tambah </button>
-                </a>
-            </div>
+            <h1 class="text-xl font-semibold">Pengembalian Buku</h1>
             <div class="relative overflow-x-auto mt-5 mb-5">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 rounded-t-lg">
@@ -66,10 +59,13 @@
                                 Nama Peminjam
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Tanggal Pinjam
+                                Tanggal Pengembalian
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-center">
+                                Status
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Tanggal Kembali
+                                Denda
                             </th>
                             <th scope="col" class="px-6 py-3 text-center"">
                                 Aksi
@@ -77,9 +73,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if ($peminjaman) : ?>
+                        <?php if ($pengembalian) : ?>
                             <?php $no = 0;
-                            foreach ($peminjaman as $row) : $no++ ?>
+                            foreach ($pengembalian as $row) : $no++ ?>
                                 <tr class=" bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 <?php echo $no ?>
@@ -91,30 +87,33 @@
                                 <?php echo nama_byNis($row->nis) ?>
                             </td>
                             <td class="px-6 py-4">
-                                <?php echo $row->tgl_pinjam ?>
+                                <?php echo $row->tgl_pengembalian ?>
                             </td>
                             <td class="px-6 py-4">
-                                <?php echo $row->tgl_kembali ?>
+                                <?php if ($row->status == 'telat') : ?>
+                                    <p class="capitalize text-red-700 bg-red-200 py-1.5 px-2 rounded-lg text-center"><?= $row->status ?></p>
+                                <?php else : ?>
+                                    <p class="capitalize text-green-700 bg-green-200 py-1.5 px-2 rounded-lg"><?= $row->status ?></p>
+                                <?php endif ?>
+                            </td>
+                            <td class="px-6 py-4">
+                                <?php if ($row->denda == '') : ?>
+                                    <p class="text-center">-</p>
+                                <?php else : ?>
+                                    <p class="capitaliz"><?= convRupiah($row->denda) ?></p>
+                                <?php endif ?>
                             </td>
                             <td class="px-6 py-4 flex items-center justify-center">
-                                <a href="<?= base_url('admin/detail_peminjaman/' . $row->index_pinjam) ?>">
+                                <a href="<?= base_url('admin/detail_pengembalian/' . $row->index_pinjam) ?>">
                                     <button class="text-white bg-yellow-300 hover:bg-yellow-400 focus:outline-none font-medium text-center rounded-sm px-2 py-1">
                                         <i class="text-base sm:text-lg fas fa-info-circle"></i>
                                     </button>
                                 </a>
 
-                                <?php if ($row->konfirmasi_pinjam == 'not') : ?>
+                                <?php if ($row->konfirmasi_bayar_denda == 'not') : ?>
                                     <a href="<?= base_url('admin/konfirmasi_pinjam/' . $row->index_pinjam) ?>">
                                         <button class="ml-2 text-white bg-green-400 hover:bg-green-500 focus:outline-none font-medium text-center rounded-sm px-2 py-1">
                                             <i class="text-base sm:text-lg fas fa-check"></i>
-                                        </button>
-                                    </a>
-                                <?php endif ?>
-
-                                <?php if ($row->konfirmasi_kembali == 'not') : ?>
-                                    <a href="<?= base_url('admin/konfirmasi_kembali/' . $row->index_pinjam) ?>">
-                                        <button class="ml-2 text-white bg-primary hover:bg-sky-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1">
-                                            <i class="text-base sm:text-lg fas fa-arrow-alt-circle-left"></i>
                                         </button>
                                     </a>
                                 <?php endif ?>
@@ -146,7 +145,7 @@
         function hapus(id) {
             var yes = confirm('Anda Yakin Untuk Menghapus?');
             if (yes == true) {
-                window.location.href = "<?php echo base_url('admin/hapus_peminjaman/') ?>" + id;
+                window.location.href = "<?php echo base_url('admin/hapus_pengembalian/') ?>" + id;
             }
         }
     </script>

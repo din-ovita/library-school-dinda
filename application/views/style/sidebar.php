@@ -70,8 +70,8 @@
                <span class="flex-1 ms-3 whitespace-nowrap">Pengembalian</span>
             </a>
          </li>
-         <li class="fixed bottom-3">
-            <a href="<?php echo base_url('login/logout') ?>" class="flex w-full items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+         <li class="fixed bottom-5">
+            <a href="<?php echo base_url('login/logout') ?>" class="flex w-full items-center p-2 text-gray-900 rounded-lg dark:text-white group">
                <i class="text-lg far fa-circle"></i>
                <span class="flex-1 ms-3 whitespace-nowrap">Keluar</span>
             </a>

@@ -38,7 +38,7 @@
     <div class="p-4 sm:ml-64 bg-gray-100  min-h-screen font-popins">
         <div class="mt-14 flex justify-between">
             <h1 class="text-xl font-semibold">Kategori Buku</h1>
-            <ul class="flex gap-2">
+            <ul class="flex gap-2 sm:text-base text-sm">
                 <li class=""> Kategori Buku</li>
             </ul>
         </div>
