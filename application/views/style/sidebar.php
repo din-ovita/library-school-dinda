@@ -87,12 +87,33 @@
                <span class="flex-1 ms-3 whitespace-nowrap">Pengembalian</span>
             </a>
          </li>
-         <li class="fixed bottom-5">
-            <a href="<?php echo base_url('login/logout') ?>" class="flex w-full items-center p-2 text-gray-900 rounded-lg dark:text-white group">
-               <i class="text-lg far fa-circle"></i>
-               <span class="flex-1 ms-3 whitespace-nowrap">Keluar</span>
-            </a>
-         </li>
       </ul>
+   </div>
+   <div class="fixed bottom-5 w-full px-3">
+      <div class="flex justify-between">
+         <a href="<?= base_url('admin/profile') ?>" class="flex w-full items-center text-gray-900 rounded-lg dark:text-white group">
+            <?php foreach ($user as $row) : ?>
+               <?php if ($row->foto == '') : ?>
+                  <img class="w-8 h-8 rounded-full" src="<?= base_url('assets/image/profile.jpg') ?>" alt="user photo">
+               <?php else : ?>
+                  <img class="w-8 h-8 rounded-full" src="<?= base_url('assets/member/') . $row->foto ?>" alt="user photo">
+               <?php endif ?>
+               <div class="ml-3">
+                  <p class="leading-4"><span class="font-medium">
+                        <?= $row->username ?>
+                     </span>
+                     <span class="block text-gray-500 text-sm"><?= $row->role ?></span>
+                  </p>
+               </div>
+            <?php endforeach ?>
+         </a>
+         <button data-popover-target="popover-default" type="button" class="text-gray-400 hover:text-gray-500 font-medium text-lg "><i class="fas fa-ellipsis-v"></i></button>
+         <div data-popover id="popover-default" role="tooltip" class="absolute z-10 invisible inline-block w-24 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+            <div class="px-3 py-2 bg-white border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
+               <a href="<?= base_url('login/logout') ?>">Keluar</a>
+            </div>
+            <div data-popper-arrow></div>
+         </div>
+      </div>
    </div>
 </aside>

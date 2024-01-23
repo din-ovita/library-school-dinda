@@ -72,47 +72,20 @@
                             </div>
                             <?php if (jumlah_buku_tersedia($row->id_buku) == 0) : ?>
                                 <button class="absolute bottom-2 mx-2 w-[90%] items-center px-3 py-2 text-sm font-medium text-center text-white bg-gray-500 rounded-lg hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-sky-800" disabled>
-                                    Pinjam
+                                    Tidak Tersedia
+                                </button>
+                            <?php elseif (cek_peminjaman_konfirmasi_kembali($row->id_buku, $this->session->userdata('nis')) != 0) : ?>
+                                <button class="absolute bottom-2 mx-2 w-[90%] items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-500 rounded-lg hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" disabled>
+                                    Sedang Dipinjam
                                 </button>
                             <?php else : ?>
-                                <button class="absolute bottom-2 mx-2 w-[90%] items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300 dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800" data-modal-target="default-modal2" data-modal-toggle="default-modal2" onclick='tampilId(<?php echo $row->id_buku ?>)'>
+                                <button class="absolute bottom-2 mx-2 w-[90%] items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300 dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800" onclick='pinjam(<?php echo $row->id_buku ?>)'>
                                     Pinjam
                                 </button>
+                                <input type="text" value="<?= $this->session->userdata('nis') ?>" id="nis" class="hidden">
                             <?php endif ?>
                         </div>
                     <?php endforeach ?>
-                </div>
-            </div>
-        </div>
-
-        <div id="default-modal2" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden mx-auto fixed top-0 right-0 left-0 z-50 justify-center items-center w-full sm:w-1/2 md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="relative p-4 w-full max-w-2xl max-h-full">
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                            Peminjaman <span id="judul_buku"></span>
-                        </h3>
-                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal2">
-                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                m
-                            </svg>
-                            <span class="sr-only">Close modal</span>
-                        </button>
-                    </div>
-                    <form onsubmit="pinjam(event)" method="post" class="p-4 md:p-5 space-y-4">
-                        <input type="text" name="buku" id="buku" class="hidden">
-                        <input type="text" id="nis" value="<?= nisMember_byIdLevel($this->session->userdata('id')) ?>" class="hidden">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah</label>
-                        <div class="mb-4">
-                            <input type="number" name="jumlah" id="jumlah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukkan jumlah buku yang akan di pinjam ...">
-                        </div>
-                        <p class="text-sm mt-2" id="batas_jml"></p>
-                        <div class="flex items-center border-t pt-4 border-gray-200 rounded-b dark:border-gray-600">
-                            <button type="submit" id="button" class="text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-primary dark:focus:ring-sky-600">Pinjam</button>
-                            <button data-modal-hide="default-modal2" type="button" class="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Batal</button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -134,36 +107,14 @@
             });
         }
 
-        let buku = $('#buku');
-        let jumlah = $('#jumlah');
-        let nis = $('#nis');
-        let judul_buku = $('#judul_buku');
-        let id = null;
-
-        function tampilId(id) {
-            id = id;
-            buku.val(id);
-            $.ajax({
-                url: '<?php echo base_url('member/judul_buku') ?>',
-                method: 'POST',
-                data: {
-                    id: id
-                },
-                success: function(response) {
-                    judul_buku.html(response)
-                }
-            });
-        }
-
-        function pinjam(e) {
-            e.preventDefault();
+        function pinjam(id) {
             console.log('test');
             $.ajax({
                 url: '<?= base_url(); ?>member/pinjam_buku',
                 method: 'POST',
                 data: {
-                    id: buku.val(),
-                    jumlah: jumlah.val(),
+                    id: id,
+                    jumlah: 1,
                     nis: nis.val(),
                 },
                 error: function(me) {
@@ -175,39 +126,6 @@
                 }
             });
         }
-
-        jumlah.change(function() {
-            $.ajax({
-                url: '<?php echo base_url('member/jumlah_buku') ?>',
-                method: 'POST',
-                data: {
-                    id_buku: buku.val()
-                },
-                success: function(response) {
-                    console.log(response);
-                    $('#jumlah_buku').html('Jumlah buku tersedia : ' + response);
-                    let jml = response;
-                    if (parseInt(jumlah.val()) > parseInt(jml)) {
-                        $('#batas_jml').html('Melebihi batas tersedia !');
-                        $('#button').prop('type', 'button');
-                        $('#button').removeClass('bg-primary');
-                        $('#button').removeClass('hover:bg-sky-600');
-                        $('#button').addClass('hover:bg-gray-600');
-                        $('#button').addClass('bg-gray-500');
-                    } else {
-                        $('#batas_jml').html('');
-                        $('#button').prop('type', 'submit');
-                        $('#button').removeClass('bg-gray-500');
-                        $('#button').removeClass('hover:bg-gray-600');
-                        $('#button').addClass('bg-primary');
-                        $('#button').addClass('hover:bg-sky-600');
-                    }
-                },
-                error: function(error) {
-                    console.error(error);
-                }
-            });
-        });
     </script>
 </body>
 

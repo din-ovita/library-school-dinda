@@ -52,16 +52,29 @@ class admin extends CI_Controller
     public function index()
     {
         $data = [
-            'menu' => 'dashboard'
+            'menu' => 'dashboard',
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $this->load->view('admin/dashboard', $data);
     }
+
+    // PROFILE
+    public function profile()
+    {
+        $data = [
+            'menu' => '',
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
+        ];
+        $this->load->view('admin/profile', $data);
+    }
+    // END PROFILE
 
     // RAK BUKU
     public function rak_buku($page = 1)
     {
         $data = [
-            'menu' => 'rak'
+            'menu' => 'rak',
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $per_page = 20;
         $data['rak'] = $this->m_admin->get_items_terbaru($per_page, $per_page * ($page - 1), 'table_rak');
@@ -160,7 +173,8 @@ class admin extends CI_Controller
     public function kategori_buku($page = 1)
     {
         $data = [
-            'menu' => 'kategori'
+            'menu' => 'kategori',
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $per_page = 20;
         $data['kategori'] = $this->m_admin->get_items_terbaru($per_page, $per_page * ($page - 1), 'table_kategori');
@@ -252,6 +266,7 @@ class admin extends CI_Controller
     {
         $data = [
             'menu' => 'buku',
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $per_page = 20;
         $data['buku'] = $this->m_admin->get_items($per_page, $per_page * ($page - 1), 'table_buku');
@@ -291,6 +306,7 @@ class admin extends CI_Controller
     {
         $data = [
             'menu' => 'buku',
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result(),
             'kategori' => $this->m_admin->get('table_kategori')
         ];
         $this->load->view('admin/buku/tambah_buku', $data);
@@ -336,7 +352,8 @@ class admin extends CI_Controller
         $data = [
             'menu' => 'buku',
             'kategori' => $this->m_admin->get('table_kategori'),
-            'buku' => $this->m_admin->getwhere('table_buku', ['id_buku' => $id])->result()
+            'buku' => $this->m_admin->getwhere('table_buku', ['id_buku' => $id])->result(),
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $this->load->view('admin/buku/edit_buku', $data);
     }
@@ -415,7 +432,8 @@ class admin extends CI_Controller
         $data = [
             'menu' => 'buku',
             'buku' => $this->m_admin->getwhere('table_buku', ['id_buku' => $id])->result(),
-            'index' => $this->m_admin->getwhere('table_id_buku', ['id_buku' => $id])->result()
+            'index' => $this->m_admin->getwhere('table_id_buku', ['id_buku' => $id])->result(),
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $this->load->view('admin/buku/detail_buku', $data);
     }
@@ -456,6 +474,7 @@ class admin extends CI_Controller
     {
         $data = [
             'menu' => 'anggota',
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $per_page = 20;
         $data['anggota'] = $this->m_admin->get_items($per_page, $per_page * ($page - 1), 'table_member');
@@ -690,6 +709,7 @@ class admin extends CI_Controller
     {
         $data = [
             'menu' => 'peminjaman',
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $per_page = 20;
         $data['peminjaman'] = $this->m_admin->get_items_where($per_page, $per_page * ($page - 1), 'table_index_pinjam', ['konfirmasi_kembali' => 'not']);
@@ -734,6 +754,7 @@ class admin extends CI_Controller
             'tgl_kembali' => date('Y-m-d', strtotime('+6 days')),
             'member' => $this->m_admin->get('table_member'),
             'buku' => $this->m_admin->get('table_buku'),
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $this->load->view('admin/peminjaman/tambah_peminjaman_buku', $data);
     }
@@ -796,6 +817,7 @@ class admin extends CI_Controller
             'index' => $this->m_admin->getwhere('table_index_pinjam', ['index_pinjam' => $id])->result(),
             'buku' => $this->m_admin->get('table_buku'),
             'peminjaman' => $this->m_admin->getwhere('table_peminjaman', ['index_pinjam' => $id])->result(),
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $this->load->view('admin/peminjaman/tambah_buku_dipinjam', $data);
     }
@@ -845,6 +867,7 @@ class admin extends CI_Controller
             'index' => $this->m_admin->getwhere('table_index_pinjam', ['index_pinjam' => $id])->result(),
             'buku' => $this->m_admin->get('table_buku'),
             'peminjaman' => $this->m_admin->getwhere('table_peminjaman', ['index_pinjam' => $id])->result(),
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $this->load->view('admin/peminjaman/detail_peminjaman', $data);
     }
@@ -954,6 +977,7 @@ class admin extends CI_Controller
     {
         $data = [
             'menu' => 'pengembalian',
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $per_page = 20;
         $data['pengembalian'] = $this->m_admin->get_items_where($per_page, $per_page * ($page - 1), 'table_index_pinjam', ['konfirmasi_kembali' => 'yes']);
@@ -1011,6 +1035,7 @@ class admin extends CI_Controller
             'index' => $this->m_admin->getwhere('table_index_pinjam', ['index_pinjam' => $id])->result(),
             'buku' => $this->m_admin->get('table_buku'),
             'pengembalian' => $this->m_admin->getwhere('table_peminjaman', ['index_pinjam' => $id])->result(),
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $this->load->view('admin/pengembalian/detail_pengembalian', $data);
     }

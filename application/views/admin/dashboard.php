@@ -11,7 +11,7 @@
 
 <body>
     <?php $this->load->view('style/sidebar') ?>
-    <div class="p-4  sm:ml-64 bg-gray-100 min-h-screen font-popins">
+    <div class="p-4 sm:ml-64 bg-gray-100 min-h-screen font-popins">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div class="flex items-center justify-between h-28 rounded bg-white p-3">
                 <div>
