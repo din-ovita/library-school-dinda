@@ -21,32 +21,35 @@ class register extends CI_Controller
     {
         $password = $this->input->post('password');
         $username = $this->input->post('username');
+        $nis = $this->input->post('nis');
 
-        $cek_user = $this->m_auth->cek_login('table_level', ['username' => $username]);
+        $cek_user = $this->m_auth->cek_login('table_level', ['username' => $username, 'nis' => $nis]);
         $pattern = "/^.{8}$/";
 
         if (!preg_match($pattern, $password)) {
-            $this->session->set_flashdata('errorPassword', 'Password harus 8 karakter!');
-            redirect(base_url('login'));
+            $this->session->set_flashdata('errorPassword', 'Password Harus 8 Karakter!');
+            redirect(base_url('register'));
         }
         
         if($cek_user) {
-            $this->session->set_flashdata('errorUsername', 'Username sudah digunakan!');
-            redirect(base_url('login'));
+            $this->session->set_flashdata('errorUsername', 'Username atau NIS Sudah Digunakan!');
+            redirect(base_url('register'));
         }
 
         $data = [
             'username' => $username,
+            'nis' => $nis,
             'password' => md5($password),
             'role' => 'member',
         ];
 
         $register = $this->m_auth->registrasi('table_level', $data);
         if ($register) {
+            $this->session->set_flashdata('successRegister', 'Pendaftaran Berhasil!');
             redirect(base_url('login'));
         } else {
-            $this->session->set_flashdata('error', 'Pendaftaran gagal!');
-            redirect(base_url('login'));
+            $this->session->set_flashdata('errorRegister', 'Pendaftaran Gagal!');
+            redirect(base_url('register'));
         }
     }
 }

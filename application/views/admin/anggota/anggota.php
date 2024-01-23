@@ -37,7 +37,7 @@
 <body>
     <?php $this->load->view('style/sidebar') ?>
     <div class="p-4 sm:ml-64 bg-gray-100  min-h-screen font-popins">
-        <div class="mt-14 flex justify-between">
+        <div class="flex justify-between">
             <h1 class="text-xl font-semibold">Anggota</h1>
             <ul class="flex gap-2 sm:text-base text-sm">
                 <li class=""> Anggota</li>
@@ -45,7 +45,9 @@
         </div>
         <div class="bg-white p-5 mt-5 ">
             <div class="flex justify-between">
-                <div></div>
+                <div>
+                    <h1 class="text-xl font-semibold">Anggota</h1>
+                </div>
                 <div class="flex gap-2">
                     <a href="<?= base_url('admin/export_anggota') ?>" class="block text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-600 rounded-lg">
                         <i class="fas fa-arrow-down"></i> Export
@@ -70,7 +72,7 @@
                             <th scope="col" class="px-6 py-3">
                                 Nama
                             </th>
-                            <th scope="col" class="px-6 py-3">
+                            <th scope="col" class="px-6 py-3 text-center">
                                 Aksi
                             </th>
                         </tr>
@@ -89,8 +91,10 @@
                                     <td class="px-6 py-4">
                                         <?php echo $row->nama ?>
                                     </td>
-                                    <td class="px-6 py-4 flex">
-                                        <button type="button" class="text-white bg-red-500 hover:bg-red-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1" onclick="hapus(<?php echo $row->id_member ?>)"> <i class="text-base sm:text-lg fas fa-trash"></i>
+                                    <td class="px-6 py-4 text-center">
+                                        <button type="button" class="text-white bg-primary hover:bg-sky-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1" onclick="edit(<?php echo $row->id_member ?>)"> <i class="text-base sm:text-lg fas fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="ml-2 text-white bg-red-500 hover:bg-red-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1" onclick="hapus(<?php echo $row->id_member ?>)"> <i class="text-base sm:text-lg fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -114,7 +118,7 @@
         <div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden mx-auto fixed top-0 right-0 left-0 z-50 justify-center items-center w-full sm:w-1/2 md:inset-0 h-[calc(100%-1rem)] max-h-full">
             <div class="relative p-4 w-full max-w-2xl max-h-full">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    
+
                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                             Tambah Anggota
@@ -131,7 +135,7 @@
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Anggota</label>
                             <div class="mb-4">
-                                <input type="text" name="anggota" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nama Anggota Buku">
+                                <input type="text" name="anggota" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nama Anggota">
                             </div>
                         </div>
                         <div>
@@ -190,12 +194,80 @@
     <?php $this->load->view('style/body') ?>
     <script type="text/javascript">
         function hapus(id) {
-            var yes = confirm('Anda Yakin Untuk Menghapus?');
-            if (yes == true) {
-                window.location.href = "<?php echo base_url('admin/hapus_member/') ?>" + id;
-            }
+            Swal.fire({
+                title: 'Anda Yakin Untuk Mengapus?',
+                text: "Data Tidak Bisa Dikembalikan",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setTimeout(function() {
+                        window.location.href = "<?php echo base_url('admin/hapus_member') ?>" + "/" + id;
+                    }, 1500);
+                    Swal.fire({
+                        title: 'Terhapus!',
+                        text: 'Berhasil Menghapus Anggota!',
+                        icon: 'success',
+                        showConfirmButton: false
+                    })
+                }
+            })
         }
     </script>
+
+    <!-- SWEETALERT -->
+    <?php if ($this->session->flashdata('successAddMember')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '<?= $this->session->flashdata('successAddMember') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if ($this->session->flashdata('errorAddMember')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: '<?= $this->session->flashdata('errorAddMember') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if ($this->session->flashdata('errorRegister')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Mendaftar!',
+                text: '<?= $this->session->flashdata('errorRegister') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+    
+    <?php if ($this->session->flashdata('successRegister')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil Mendaftar!',
+                text: '<?= $this->session->flashdata('successRegister') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+    <!-- END SWEETALERT -->
 </body>
 
 </html>

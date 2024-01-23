@@ -9,10 +9,12 @@ module.exports = {
 			colors: {
 				primary: "rgb(14 165 233)",
 				second: "#effafc",
-				// second: "#98E4FF"
 			},
 			fontFamily: {
 				popins:  'Poppins',
+			},
+			borderRadius: {
+				primary: ['41% 59% 39% 61%', '72% 44% 56% 28%'],
 			}
 		},
 	},

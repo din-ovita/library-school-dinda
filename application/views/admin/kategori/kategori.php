@@ -36,7 +36,7 @@
 <body>
     <?php $this->load->view('style/sidebar') ?>
     <div class="p-4 sm:ml-64 bg-gray-100  min-h-screen font-popins">
-        <div class="mt-14 flex justify-between">
+        <div class=" flex justify-between">
             <h1 class="text-xl font-semibold">Kategori Buku</h1>
             <ul class="flex gap-2 sm:text-base text-sm">
                 <li class=""> Kategori Buku</li>
@@ -44,7 +44,9 @@
         </div>
         <div class="bg-white p-5 mt-5 ">
             <div class="flex justify-between">
-                <div></div>
+                <div>
+                    <h1 class="text-xl font-semibold">Kategori Buku</h1>
+                </div>
                 <button data-modal-target="default-modal" data-modal-toggle="default-modal" class="block text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-sky-600 rounded-lg" type="button">
                     <i class="fas fa-plus"></i>
                     Tambah </button>
@@ -195,10 +197,28 @@
     <?php $this->load->view('style/body') ?>
     <script type="text/javascript">
         function hapus(id) {
-            var yes = confirm('Anda Yakin Untuk Menghapus?');
-            if (yes == true) {
-                window.location.href = "<?php echo base_url('admin/hapus_kategori/') ?>" + id;
-            }
+            Swal.fire({
+                title: 'Anda Yakin Untuk Mengapus?',
+                text: "Data Tidak Bisa Dikembalikan",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setTimeout(function() {
+                        window.location.href = "<?php echo base_url('admin/hapus_kategori') ?>" + "/" + id;
+                    }, 1500);
+                    Swal.fire({
+                        title: 'Terhapus!',
+                        text: 'Berhasil Menghapus Kategori Buku!',
+                        icon: 'success',
+                        showConfirmButton: false
+                    })
+                }
+            })
         }
 
         let rak = $('#rak');
@@ -242,12 +262,59 @@
                     console.log(me);
                 },
                 success: function(data) {
-                    console.log(data);
-                    window.location.reload();
+                    if (data.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: data.message,
+                            showConfirmButton: false,
+                            timer: 1500,
+                            didClose: () => {
+                                window.location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: data.message,
+                            showConfirmButton: false,
+                            timer: 1500,
+                            didClose: () => {
+                                window.location.reload();
+                            }
+                        });
+                    }
                 }
             });
         }
     </script>
+
+    <!-- SWEETALERT -->
+    <?php if ($this->session->flashdata('successAddKategori')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '<?= $this->session->flashdata('successAddKategori') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if ($this->session->flashdata('errorAddKategori')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: '<?= $this->session->flashdata('errorAddKategori') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+    <!-- END SWEETALERT -->
 </body>
 
 </html>

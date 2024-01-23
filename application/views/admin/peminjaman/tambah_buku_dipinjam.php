@@ -12,7 +12,7 @@
 <body>
     <?php $this->load->view('style/sidebar') ?>
     <div class="p-4 sm:ml-64 bg-gray-100  min-h-screen font-popins">
-        <div class="mt-14 flex justify-between">
+        <div class=" flex justify-between">
             <h1 class="text-xl font-semibold">Tambah Peminjaman Buku</h1>
             <ul class="flex gap-2 sm:text-base text-sm">
                 <li class="capitalize text-primary"><a href="<?php echo base_url('admin/peminjaman_buku') ?>">Peminjaman</a></li>

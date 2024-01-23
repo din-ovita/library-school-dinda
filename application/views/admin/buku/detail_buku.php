@@ -11,7 +11,7 @@
 <body>
     <?php $this->load->view('style/sidebar') ?>
     <div class="p-4 sm:ml-64 bg-gray-100 min-h-screen font-popins">
-        <div class="mt-14 flex justify-between">
+        <div class=" flex justify-between">
             <h1 class="text-xl font-semibold">Buku</h1>
             <ul class="flex gap-2 sm:text-base text-sm">
                 <li class="capitalize text-primary"><a href="<?php echo base_url('admin/buku') ?>">Buku</a></li>
@@ -20,45 +20,60 @@
         </div>
         <div class="bg-white p-3 sm:p-5 mt-5 ">
             <?php foreach ($buku as $row) : ?>
-                <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-6">
-                    <img src="<?= base_url('assets/buku/' . $row->foto) ?>" class="w-full h-full sm:h-5/6">
-                    <div class="mt-5 sm:mt-0">
+                <div class="grid grid-cols-1 sm:grid-cols-3 sm:gap-x-6">
+                    <img src="<?= base_url('assets/buku/' . $row->foto) ?>" class="w-full h-full">
+                    <div class="col-span-2 mt-5 sm:mt-0">
                         <div>
                             <p class="text-sm font-semibold">Judul Buku</p>
                             <br>
-                            <p><?= $row->nama_buku ?></p>
+                            <p class="text-sm md:text-base"><?= $row->nama_buku ?></p>
+                            <hr>
+                        </div>
+                        <br>
+                        <div>
+                            <p class="text-sm font-semibold">Pengarang Buku</p>
+                            <br>
+                            <p class="text-sm md:text-base"><?= $row->pengarang ?></p>
                             <hr>
                         </div>
                         <br>
                         <div>
                             <p class="text-sm font-semibold">Kategori Buku</p>
                             <br>
-                            <p><?= tampil_nama_kategori($row->id_kategori) ?></p>
+                            <p class="text-sm md:text-base"><?= tampil_nama_kategori($row->id_kategori) ?></p>
                             <hr>
                         </div>
                         <br>
                         <div>
                             <p class="text-sm font-semibold">Rak Buku</p>
                             <br>
-                            <p><?= namaRak_byKategori($row->id_kategori) ?></p>
+                            <p class="text-sm md:text-base"><?= namaRak_byKategori($row->id_kategori) ?></p>
                             <hr>
                         </div>
                         <br>
                         <div>
                             <p class="text-sm font-semibold">Jumlah Buku</p>
                             <br>
-                            <p><?= jumlah_buku($row->id_buku) ?></p>
+                            <p class="text-sm md:text-base"><?= jumlah_buku($row->id_buku) ?></p>
                             <hr>
                         </div>
                         <br>
-                        <div class="flex justify-between ">
-                            <div></div>
-                            <button type="button" data-modal-target="default-modal2" data-modal-toggle="default-modal2" onclick='tampilId(<?php echo $row->id_buku ?>)' class="block text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-sky-600 rounded-lg" type="button">
-                                <i class="fas fa-plus"></i>
-                                Tambah Jumlah</button>
-                        </div>
                     </div>
                 </div>
+                <br>
+                <div>
+                    <p class="text-sm font-semibold">Deskripsi Buku</p>
+                    <br>
+                    <p class="text-sm md:text-base"><?= $row->deskripsi ?></p>
+                    <hr>
+                </div>
+                <br>
+                <div class="flex justify-end">
+                    <button type="button" data-modal-target="default-modal2" data-modal-toggle="default-modal2" onclick='tampilId(<?php echo $row->id_buku ?>)' class="block text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-sky-600 rounded-lg" type="button">
+                        <i class="fas fa-plus"></i>
+                        Tambah Jumlah</button>
+                </div>
+                <br>
                 <div class="relative overflow-x-auto mb-5 mt-4 sm:mt-0">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 rounded-t-lg">
@@ -138,7 +153,7 @@
                             <input type="number" name="jumlah" id="jumlah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Jumlah Buku">
                         </div>
                         <div class="flex items-center border-t pt-4 border-gray-200 rounded-b dark:border-gray-600">
-                            <button type="submit" class="text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-primary dark:focus:ring-sky-600">Edit</button>
+                            <button type="submit" class="text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-primary dark:focus:ring-sky-600">Tambah</button>
                             <button data-modal-hide="default-modal2" type="button" class="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Batal</button>
                         </div>
                     </form>
@@ -150,12 +165,31 @@
 
     <?php $this->load->view('style/body') ?>
     <script type="text/javascript">
-        function hapus(id) {
-            var yes = confirm('Anda Yakin Untuk Menghapus?');
-            if (yes == true) {
-                window.location.href = "<?php echo base_url('admin/hapus_index_buku/') ?>" + id;
-            }
+                function hapus(id) {
+            Swal.fire({
+                title: 'Anda Yakin Untuk Mengapus?',
+                text: "Data Tidak Bisa Dikembalikan",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setTimeout(function() {
+                        window.location.href = "<?php echo base_url('admin/hapus_index_buku') ?>" + "/" + id;
+                    }, 1500);
+                    Swal.fire({
+                        title: 'Terhapus!',
+                        text: 'Berhasil Menghapus Index Buku!',
+                        icon: 'success',
+                        showConfirmButton: false
+                    })
+                }
+            })
         }
+
 
         let jumlah = $('#jumlah');
         let selectedId = null;
@@ -180,7 +214,7 @@
                 },
                 success: function(data) {
                     console.log(data);
-                    // window.location.reload();
+                    window.location.reload();
                 }
             });
         }

@@ -37,7 +37,7 @@
 <body>
     <?php $this->load->view('style/sidebar') ?>
     <div class="p-4 sm:ml-64 bg-gray-100 min-h-screen font-popins">
-        <div class="mt-14 flex justify-between">
+        <div class=" flex justify-between">
             <h1 class="text-xl font-semibold">Pengembalian Buku</h1>
             <ul class="flex gap-2 sm:text-base text-sm">
                 <li class=""> Pengembalian</li>
@@ -97,10 +97,10 @@
                                 <?php endif ?>
                             </td>
                             <td class="px-6 py-4">
-                                <?php if ($row->denda == '') : ?>
+                                <?php if (denda_keterlambatan($row->index_pinjam) == '') : ?>
                                     <p class="text-center">-</p>
                                 <?php else : ?>
-                                    <p class="capitaliz"><?= convRupiah($row->denda) ?></p>
+                                    <p class="capitaliz"><?= convRupiah(denda_keterlambatan($row->index_pinjam)) ?></p>
                                 <?php endif ?>
                             </td>
                             <td class="px-6 py-4 flex items-center justify-center">
@@ -110,13 +110,12 @@
                                     </button>
                                 </a>
 
-                                <?php if ($row->konfirmasi_bayar_denda == 'not') : ?>
-                                    <a href="<?= base_url('admin/konfirmasi_pinjam/' . $row->index_pinjam) ?>">
+                                <?php if (konfirmasi_bayar_denda($row->index_pinjam) == 'belum bayar') : ?>
+                                    <a href="<?= base_url('admin/konfirmasi_bayar_denda/' . $row->index_pinjam) ?>">
                                         <button class="ml-2 text-white bg-green-400 hover:bg-green-500 focus:outline-none font-medium text-center rounded-sm px-2 py-1">
                                             <i class="text-base sm:text-lg fas fa-check"></i>
                                         </button>
-                                    </a>
-                                <?php endif ?>
+                                    </a> <?php endif ?>
 
                                 <button class="ml-2 text-white bg-red-500 hover:bg-red-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1" onclick="hapus('<?php echo $row->index_pinjam ?>')">
                                     <i class="text-base sm:text-lg fas fa-trash"></i>
@@ -143,10 +142,28 @@
     <?php $this->load->view('style/body') ?>
     <script type="text/javascript">
         function hapus(id) {
-            var yes = confirm('Anda Yakin Untuk Menghapus?');
-            if (yes == true) {
-                window.location.href = "<?php echo base_url('admin/hapus_pengembalian/') ?>" + id;
-            }
+            Swal.fire({
+                title: 'Anda Yakin Untuk Mengapus?',
+                text: "Data Tidak Bisa Dikembalikan",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setTimeout(function() {
+                        window.location.href = "<?php echo base_url('admin/hapus_pengembalian') ?>" + "/" + id;
+                    }, 1500);
+                    Swal.fire({
+                        title: 'Terhapus!',
+                        text: 'Berhasil Menghapus Pengembalian Buku!',
+                        icon: 'success',
+                        showConfirmButton: false
+                    })
+                }
+            })
         }
     </script>
 </body>

@@ -26,17 +26,19 @@ class login extends CI_Controller
 
 		if ($query->num_rows() == 1) {
 			$data_session = ["id" => $res['id_level'], "username" => $res['username'], "username" => $res['username'], "role" => $res['role'], 'logged_in' => 'login'];
-			$this->session->set_userdata($data_session);
 			$this->session->set_userdata('login', $data_session);
+			$this->session->set_userdata($data_session);
 			if ($res['role'] == 'admin') {
 				$data_session['login_admin'] = "login";
 				redirect(base_url('admin'));
 			} else {
 				$data_session['login_member'] = "login";
-				redirect(base_url('home'));
+				$data_session['nis'] = $res['nis'];
+				$this->session->set_userdata($data_session);
+				redirect(base_url('member'));
 			}
 		} else {
-			$this->session->set_flashdata('error_message', 'Incorrect username or password!');
+			$this->session->set_flashdata('error_message', 'Username atau Password Salah!');
 			redirect(base_url('login'));
 		}
 	}

@@ -55,6 +55,20 @@
             }
         }
     </script>
+
+    <!-- SWEETALERT -->
+    <?php if ($this->session->flashdata('error_message')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Masuk!',
+                text: '<?= $this->session->flashdata('error_message') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+    <!-- END SWEETALERT -->
 </body>
 
 </html>

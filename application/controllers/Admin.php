@@ -63,8 +63,8 @@ class admin extends CI_Controller
         $data = [
             'menu' => 'rak'
         ];
-        $per_page = 10;
-        $data['rak'] = $this->m_admin->get_items($per_page, $per_page * ($page - 1), 'table_rak');
+        $per_page = 20;
+        $data['rak'] = $this->m_admin->get_items_terbaru($per_page, $per_page * ($page - 1), 'table_rak');
 
         $total_rows = $this->m_admin->count_items('table_rak');
         $config['base_url'] = base_url('admin/rak_buku');
@@ -109,10 +109,10 @@ class admin extends CI_Controller
 
         $tambah = $this->m_admin->tambah_rak($data);
         if ($tambah) {
-            $this->session->set_flashdata('error', 'Tambah rak gagal!');
+            $this->session->set_flashdata('success', 'Tambah Rak Berhasil!');
             redirect(base_url('admin/rak_buku'));
         } else {
-            $this->session->set_flashdata('success', 'Tambah rak berhasil!');
+            $this->session->set_flashdata('error', 'Tambah rak gagal!');
             redirect(base_url('admin/rak_buku'));
         }
     }
@@ -140,12 +140,13 @@ class admin extends CI_Controller
             'id_rak' => $this->input->post('id')
         ]);
         if ($update) {
-            $this->session->set_flashdata('error', 'Edit rak gagal!');
-            redirect(base_url('admin/rak_buku'));
+            $response = ['status' => 'success', 'message' => 'Edit Rak Berhasil!'];
         } else {
-            $this->session->set_flashdata('success', 'Edit rak berhasil!');
-            redirect(base_url('admin/rak_buku'));
+            $response = ['status' => 'error', 'message' => 'Edit Rak Gagal!'];
         }
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
     }
     // END RAK BUKU
 
@@ -161,8 +162,8 @@ class admin extends CI_Controller
         $data = [
             'menu' => 'kategori'
         ];
-        $per_page = 10;
-        $data['kategori'] = $this->m_admin->get_items($per_page, $per_page * ($page - 1), 'table_kategori');
+        $per_page = 20;
+        $data['kategori'] = $this->m_admin->get_items_terbaru($per_page, $per_page * ($page - 1), 'table_kategori');
 
         $total_rows = $this->m_admin->count_items('table_kategori');
         $config['base_url'] = base_url('admin/kategori_buku');
@@ -204,10 +205,10 @@ class admin extends CI_Controller
 
         $tambah = $this->m_admin->tambah_kategori($data);
         if ($tambah) {
-            $this->session->set_flashdata('error', 'Tambah kategori buku gagal!');
+            $this->session->set_flashdata('successAddKategori', 'Tambah Kategori Buku Berhasil!');
             redirect(base_url('admin/kategori_buku'));
         } else {
-            $this->session->set_flashdata('success', 'Tambah kategori buku berhasil!');
+            $this->session->set_flashdata('errorAddKategori', 'Tambah Kategori Buku Gagal!');
             redirect(base_url('admin/kategori_buku'));
         }
     }
@@ -224,12 +225,13 @@ class admin extends CI_Controller
             'id_kategori' => $this->input->post('id'),
         ]);
         if ($update) {
-            $this->session->set_flashdata('error', 'Edit kategori buku gagal!');
-            redirect(base_url('admin/kategori_buku'));
+            $response = ['status' => 'success', 'message' => 'Edit Kategori Buku Berhasil!'];
         } else {
-            $this->session->set_flashdata('success', 'Edit kategori buku berhasil!');
-            redirect(base_url('admin/kategori_buku'));
+            $response = ['status' => 'error', 'message' => 'Edit Kategori Buku Gagal!'];
         }
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
     }
 
     public function hapus_kategori($id)
@@ -251,7 +253,7 @@ class admin extends CI_Controller
         $data = [
             'menu' => 'buku',
         ];
-        $per_page = 10;
+        $per_page = 20;
         $data['buku'] = $this->m_admin->get_items($per_page, $per_page * ($page - 1), 'table_buku');
 
         $total_rows = $this->m_admin->count_items('table_buku');
@@ -300,12 +302,14 @@ class admin extends CI_Controller
         $judul = $this->input->post('judul');
         $cover = $this->upload_img('cover');
         $jumlah = $this->input->post('jumlah');
+        $deskripsi = $this->input->post('deskripsi');
+        $pengarang = $this->input->post('pengarang');
         $index = $this->acak(6);
 
         if ($cover[0] == false) {
-            $data = ['id_kategori' => $kategori, 'foto' => 'book.png', 'nama_buku' => $judul, 'jumlah' => $jumlah, 'index_buku' => 'IB-' . $index];
+            $data = ['id_kategori' => $kategori, 'foto' => 'book.png', 'nama_buku' => $judul, 'jumlah' => $jumlah, 'index_buku' => 'IB-' . $index, 'pengarang' => $pengarang, 'deskripsi' => $deskripsi];
         } else {
-            $data = ['id_kategori' => $kategori, 'foto' => $cover[1], 'nama_buku' => $judul, 'jumlah' => $jumlah, 'index_buku' => 'IB-' . $index];
+            $data = ['id_kategori' => $kategori, 'foto' => $cover[1], 'nama_buku' => $judul, 'jumlah' => $jumlah, 'index_buku' => 'IB-' . $index, 'pengarang' => $pengarang, 'deskripsi' => $deskripsi];
         }
 
         $add_book = $this->m_admin->tambah_buku($data);
@@ -319,10 +323,10 @@ class admin extends CI_Controller
             }
 
             $this->m_admin->tambah_index_buku($index_buku);
-            $this->session->set_flashdata('buku', 'Tambah buku berhasil!');
+            $this->session->set_flashdata('successAddBuku', 'Tambah Buku Berhasil!');
             redirect(base_url('admin/buku'));
         } else {
-            $this->session->set_flashdata('errorBuku', 'Tambah buku gagal!');
+            $this->session->set_flashdata('errorAddBuku', 'Tambah Buku Gagal!');
             redirect(base_url('admin/tambah_buku'));
         }
     }
@@ -355,10 +359,10 @@ class admin extends CI_Controller
 
 
         if ($edit) {
-            $this->session->set_flashdata('editBuku', 'Edit buku berhasil!');
+            $this->session->set_flashdata('successEditBuku', 'Edit Buku Berhasil!');
             redirect(base_url('admin/buku'));
         } else {
-            $this->session->set_flashdata('buku', 'Edit buku gagal!');
+            $this->session->set_flashdata('errorEditBuku', 'Edit Buku Gagal!');
             redirect(base_url('admin/edit_buku/' . $id_buku));
         }
     }
@@ -366,10 +370,10 @@ class admin extends CI_Controller
     public function hapus_buku($id)
     {
 
-        $index = $this->m_admin->getwhere('tabel_id_buku', ['id_buku' => $id])->result();
+        $index = $this->m_admin->getwhere('table_id_buku', ['id_buku' => $id])->result();
 
         foreach ($index as $i) {
-            $this->m_admin->delete('tabel_id_buku', 'id', $i->id);
+            $this->m_admin->delete('table_id_buku', 'id', $i->id);
             echo $i->id;
         }
 
@@ -388,7 +392,7 @@ class admin extends CI_Controller
     {
         $id_buku = idBuku_byIndex($id);
 
-        $hapus = $this->m_admin->delete('tabel_id_buku', 'id', $id);
+        $hapus = $this->m_admin->delete('table_id_buku', 'id', $id);
 
         $dataBuku = [
             'id_buku' => $id_buku,
@@ -411,7 +415,7 @@ class admin extends CI_Controller
         $data = [
             'menu' => 'buku',
             'buku' => $this->m_admin->getwhere('table_buku', ['id_buku' => $id])->result(),
-            'index' => $this->m_admin->getwhere('tabel_id_buku', ['id_buku' => $id])->result()
+            'index' => $this->m_admin->getwhere('table_id_buku', ['id_buku' => $id])->result()
         ];
         $this->load->view('admin/buku/detail_buku', $data);
     }
@@ -453,7 +457,7 @@ class admin extends CI_Controller
         $data = [
             'menu' => 'anggota',
         ];
-        $per_page = 10;
+        $per_page = 20;
         $data['anggota'] = $this->m_admin->get_items($per_page, $per_page * ($page - 1), 'table_member');
 
         $total_rows = $this->m_admin->count_items('table_member');
@@ -495,6 +499,7 @@ class admin extends CI_Controller
         $data_level = [
             'username' => $nama,
             'password' => md5($nis),
+            'nis' => $nis,
             'role' => 'member'
         ];
 
@@ -506,10 +511,10 @@ class admin extends CI_Controller
                 'nama' => $nama,
             ];
             $this->m_admin->tambah_member($member);
-            $this->session->set_flashdata('member', 'Tambah anggota berhasil!');
+            $this->session->set_flashdata('successAddMember', 'Tambah Anggota Berhasil!');
             redirect(base_url('admin/anggota'));
         } else {
-            $this->session->set_flashdata('error', 'Tambah anggota gagal!');
+            $this->session->set_flashdata('errorAddMember', 'Tambah Anggota Gagal!');
             redirect(base_url('admin/anggota'));
         }
     }
@@ -553,6 +558,7 @@ class admin extends CI_Controller
                         'username' => $nama,
                         'password' => md5($nis),
                         'role'     => 'member',
+                        'nis'      => $nis
                     ];
 
                     $member[] = [
@@ -570,14 +576,19 @@ class admin extends CI_Controller
                     $inserted_ids[] = $this->db->insert_id();
                 }
 
-                foreach ($member as &$m) {
-                    $m['id_level'] = array_shift($inserted_ids);
+                if (!empty($inserted_ids)) {
+                    foreach ($member as &$m) {
+                        $m['id_level'] = array_shift($inserted_ids);
+                    }
+
+                    $this->db->insert_batch('table_member', $member);
+
+                    $this->session->set_flashdata('success', 'Berhasil upload anggota!');
+                    redirect(base_url('admin/anggota'));
+                } else {
+                    $this->session->set_flashdata('error', 'Gagal upload anggota!');
+                    redirect(base_url('admin/anggota'));
                 }
-
-                $this->db->insert_batch('table_member', $member);
-
-                $this->session->set_flashdata('success', 'Berhasil upload anggota!');
-                redirect(base_url('admin/anggota'));
             } else {
                 echo 'No data to insert.';
             }
@@ -680,10 +691,10 @@ class admin extends CI_Controller
         $data = [
             'menu' => 'peminjaman',
         ];
-        $per_page = 10;
-        $data['peminjaman'] = $this->m_admin->get_items_where($per_page, $per_page * ($page - 1), 'tabel_index_pinjam', ['konfirmasi_kembali' => 'not']);
+        $per_page = 20;
+        $data['peminjaman'] = $this->m_admin->get_items_where($per_page, $per_page * ($page - 1), 'table_index_pinjam', ['konfirmasi_kembali' => 'not']);
 
-        $total_rows = $this->m_admin->count_items('tabel_index_pinjam');
+        $total_rows = $this->m_admin->count_items('table_index_pinjam');
         $config['base_url'] = base_url('admin/peminjaman_buku');
         $config['total_rows'] = $total_rows;
         $config['per_page'] = $per_page;
@@ -755,6 +766,7 @@ class admin extends CI_Controller
             foreach ($books as $row) {
                 $data[] = [
                     'index_buku' => $row->index_buku,
+                    'id_buku' => $buku,
                     'index_pinjam' => index_pinjam($add_index_pinjam),
                     'nis' => $member
                 ];
@@ -767,7 +779,7 @@ class admin extends CI_Controller
             }
 
             $this->db->insert_batch('table_peminjaman', $data);
-            $this->db->update_batch('tabel_id_buku', $status, 'id');
+            $this->db->update_batch('table_id_buku', $status, 'id');
 
             $this->session->set_flashdata('success', 'Tambah peminjaman berhasil!');
             redirect(base_url('admin/tambah_buku_dipinjam/' . index_pinjam($add_index_pinjam)));
@@ -781,7 +793,7 @@ class admin extends CI_Controller
     {
         $data = [
             'menu' => 'peminjaman',
-            'index' => $this->m_admin->getwhere('tabel_index_pinjam', ['index_pinjam' => $id])->result(),
+            'index' => $this->m_admin->getwhere('table_index_pinjam', ['index_pinjam' => $id])->result(),
             'buku' => $this->m_admin->get('table_buku'),
             'peminjaman' => $this->m_admin->getwhere('table_peminjaman', ['index_pinjam' => $id])->result(),
         ];
@@ -804,6 +816,7 @@ class admin extends CI_Controller
             $data[] = [
                 'index_buku' => $row->index_buku,
                 'index_pinjam' => $index,
+                'id_buku' => $buku,
                 'nis' => $member
             ];
 
@@ -816,7 +829,7 @@ class admin extends CI_Controller
 
         $add = $this->db->insert_batch('table_peminjaman', $data);
         if ($add) {
-            $this->db->update_batch('tabel_id_buku', $status, 'id');
+            $this->db->update_batch('table_id_buku', $status, 'id');
             $this->session->set_flashdata('success', 'Tambah peminjaman berhasil!');
             redirect(base_url('admin/tambah_buku_dipinjam/' . $index));
         } else {
@@ -829,7 +842,7 @@ class admin extends CI_Controller
     {
         $data = [
             'menu' => 'peminjaman',
-            'index' => $this->m_admin->getwhere('tabel_index_pinjam', ['index_pinjam' => $id])->result(),
+            'index' => $this->m_admin->getwhere('table_index_pinjam', ['index_pinjam' => $id])->result(),
             'buku' => $this->m_admin->get('table_buku'),
             'peminjaman' => $this->m_admin->getwhere('table_peminjaman', ['index_pinjam' => $id])->result(),
         ];
@@ -840,6 +853,8 @@ class admin extends CI_Controller
     {
         $data = [
             'index_pinjam' => $id,
+            'tgl_pinjam' => date('Y-m-d'),
+            'tgl_kembali' => date('Y-m-d', strtotime('+6 days')),
             'konfirmasi_pinjam' => 'yes'
         ];
         $konfimasi = $this->m_admin->konfirmasi_peminjaman($data, $id);
@@ -856,14 +871,24 @@ class admin extends CI_Controller
     {
         $tgl_kembali = tgl_kembali($id);
         $status = '';
-        $konfirmasi_bayar_denda = '';
 
         if ($tgl_kembali > date('Y-m-d')) {
             $status = 'tepat waktu';
-            $konfirmasi_bayar_denda = 'yes';
+            echo 'yaahhh';
         } else {
             $status = 'telat';
-            $konfirmasi_bayar_denda = 'not';
+            $selisih = strtotime(date('Y-m-d')) - strtotime($tgl_kembali);
+            $selisih_in_days = floor($selisih / (60 * 60 * 24));
+
+            $denda = nominal_denda(1) * $selisih_in_days;
+
+            $data_telat = [
+                'index_pinjam' => $id,
+                'denda_perhari' => nominal_denda(1),
+                'denda' => $denda
+            ];
+
+            $this->m_admin->tambah_telat_mengembalikan($data_telat);
         }
 
         $data = [
@@ -871,7 +896,6 @@ class admin extends CI_Controller
             'konfirmasi_kembali' => 'yes',
             'tgl_pengembalian' => date('Y-m-d'),
             'status' => $status,
-            'konfirmasi_bayar_denda' => $konfirmasi_bayar_denda
         ];
         $konfimasi = $this->m_admin->konfirmasi_peminjaman($data, $id);
         if ($konfimasi) {
@@ -886,7 +910,7 @@ class admin extends CI_Controller
                 ];
             }
 
-            $this->db->update_batch('tabel_id_buku', $data_buku, 'index_buku');
+            $this->db->update_batch('table_id_buku', $data_buku, 'index_buku');
 
             $this->session->set_flashdata('success', 'Konfirmasi pengembalian berhasil!');
             redirect(base_url('admin/peminjaman_buku'));
@@ -909,9 +933,9 @@ class admin extends CI_Controller
             ];
         }
 
-        $this->db->update_batch('tabel_id_buku', $data_buku, 'index_buku');
+        $this->db->update_batch('table_id_buku', $data_buku, 'index_buku');
 
-        $this->m_admin->delete('tabel_index_pinjam', 'index_pinjam', $id);
+        $this->m_admin->delete('table_index_pinjam', 'index_pinjam', $id);
 
         $hapus_pinjam = $this->m_admin->deletewhere('table_peminjaman', ['index_pinjam' => $id]);
 
@@ -931,10 +955,10 @@ class admin extends CI_Controller
         $data = [
             'menu' => 'pengembalian',
         ];
-        $per_page = 10;
-        $data['pengembalian'] = $this->m_admin->get_items_where($per_page, $per_page * ($page - 1), 'tabel_index_pinjam', ['konfirmasi_kembali' => 'yes']);
+        $per_page = 20;
+        $data['pengembalian'] = $this->m_admin->get_items_where($per_page, $per_page * ($page - 1), 'table_index_pinjam', ['konfirmasi_kembali' => 'yes']);
 
-        $total_rows = $this->m_admin->count_items('tabel_index_pinjam');
+        $total_rows = $this->m_admin->count_items('table_index_pinjam');
         $config['base_url'] = base_url('admin/pengembalian_buku');
         $config['total_rows'] = $total_rows;
         $config['per_page'] = $per_page;
@@ -967,7 +991,7 @@ class admin extends CI_Controller
 
     public function hapus_pengembalian($id)
     {
-        $this->m_admin->delete('tabel_index_pinjam', 'index_pinjam', $id);
+        $this->m_admin->delete('table_index_pinjam', 'index_pinjam', $id);
 
         $hapus_pinjam = $this->m_admin->deletewhere('table_peminjaman', ['index_pinjam' => $id]);
 
@@ -984,13 +1008,44 @@ class admin extends CI_Controller
     {
         $data = [
             'menu' => 'pengembalian',
-            'index' => $this->m_admin->getwhere('tabel_index_pinjam', ['index_pinjam' => $id])->result(),
+            'index' => $this->m_admin->getwhere('table_index_pinjam', ['index_pinjam' => $id])->result(),
             'buku' => $this->m_admin->get('table_buku'),
             'pengembalian' => $this->m_admin->getwhere('table_peminjaman', ['index_pinjam' => $id])->result(),
         ];
         $this->load->view('admin/pengembalian/detail_pengembalian', $data);
     }
 
+    public function aksi_edit_denda()
+    {
+        $data  = [
+            'id' => $this->input->post('id_denda'),
+            'denda' => $this->input->post('nominal')
+        ];
+        $edit = $this->m_admin->update_denda($data, ['id' => $this->input->post('id_denda')]);
+        if ($edit) {
+            $this->session->set_flashdata('success', 'Ubah denda berhasil!');
+            redirect(base_url('admin/peminjaman_buku'));
+        } else {
+            $this->session->set_flashdata('error', 'Ubah denda gagal!');
+            redirect(base_url('admin/peminjaman_buku'));
+        }
+    }
 
+    public function konfirmasi_bayar_denda($id)
+    {
+        $data = [
+            'konfirmasi' => 'sudah bayar',
+            'index_pinjam' => $id
+        ];
+
+        $konfirmasi = $this->m_admin->konfirmasi_bayar_denda($data, ['index_pinjam' => $id]);
+        if ($konfirmasi) {
+            $this->session->set_flashdata('success', 'Konfirmasi bayar denda berhasil!');
+            redirect(base_url('admin/pengembalian_buku'));
+        } else {
+            $this->session->set_flashdata('error', 'Konfirmasi bayar denda gagal!');
+            redirect(base_url('admin/pengembalian_buku'));
+        }
+    }
     // END PENGEMBALIAN
 }

@@ -8,6 +8,12 @@ class m_admin extends CI_Model
         return $this->db->get($table)->result();
     }
 
+    public function getTerbaru($table)
+    {
+        $this->db->order_by('date', 'desc');
+        return $this->db->get($table)->result();
+    }
+
     public function get_id($table, $id_col, $id)
     {
         $data = $this->db->where($id_col, $id)->get($table);
@@ -69,7 +75,7 @@ class m_admin extends CI_Model
 
     public function tambah_index_buku($data)
     {
-        $this->db->insert_batch('tabel_id_buku', $data);
+        $this->db->insert_batch('table_id_buku', $data);
     }
 
     public function update_buku($data, $where)
@@ -100,6 +106,14 @@ class m_admin extends CI_Model
         return $query->result();
     }
 
+    public function get_items_terbaru($limit, $offset, $tabel)
+    {
+        $this->db->order_by('timestamp', 'desc');
+        $this->db->limit($limit, $offset);
+        $query = $this->db->get($tabel);
+        return $query->result();
+    }
+
     public function get_items_where($limit, $offset, $tabel, $where)
     {
         $this->db->limit($limit, $offset);
@@ -116,7 +130,7 @@ class m_admin extends CI_Model
     // PEMINJAMAN
     public function tambah_index_pinjam($data)
     {
-        $this->db->insert('tabel_index_pinjam', $data);
+        $this->db->insert('table_index_pinjam', $data);
         return $this->db->insert_id();
     }
 
@@ -124,13 +138,32 @@ class m_admin extends CI_Model
     {
         $this->db->where($where);
         $this->db->limit($limit);
-        $data = $this->db->get('tabel_id_buku');
+        $data = $this->db->get('table_id_buku');
         return $data->result();
     }
 
     public function konfirmasi_peminjaman($data, $where)
     {
-        $this->db->update('tabel_index_pinjam', $data, ['index_pinjam' => $where]);
+        $this->db->update('table_index_pinjam', $data, ['index_pinjam' => $where]);
+        return $this->db->affected_rows();
+    }
+
+    // DENDA 
+    public function update_denda($data, $where)
+    {
+        $this->db->update('table_denda', $data, $where);
+        return $this->db->affected_rows();
+    }
+
+    public function tambah_telat_mengembalikan($data)
+    {
+        $this->db->insert('table_telat_mengembalikan', $data);
+        return $this->db->insert_id();
+    }
+
+    public function konfirmasi_bayar_denda($data, $where)
+    {
+        $this->db->update('table_telat_mengembalikan', $data, $where);
         return $this->db->affected_rows();
     }
 }

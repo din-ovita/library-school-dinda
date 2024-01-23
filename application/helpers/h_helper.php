@@ -1,5 +1,31 @@
 <?php
 
+function indonesian_date($date)
+{
+    $indonesian_month = array(
+        'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember',
+    );
+    $year = substr($date, 0, 4);
+    $month = substr($date, 5, 2);
+    $currentdate = substr($date, 8, 2);
+    $time = substr($date, 11);
+    $result = $currentdate . ' ' . $indonesian_month[(int) $month - 1] . ' ' . $year;
+
+    return $result;
+}
+
+
 function convRupiah($value)
 {
     $float = floatval($value);
@@ -53,7 +79,7 @@ function jumlah_buku($id)
 {
     $ci = &get_instance();
     $ci->load->database();
-    $result = $ci->db->where('id_buku', $id)->get('tabel_id_buku');
+    $result = $ci->db->where('id_buku', $id)->get('table_id_buku');
     return $result->num_rows();
 }
 
@@ -62,7 +88,7 @@ function jumlah_buku_tersedia($id)
     $ci = &get_instance();
     $ci->load->database();
     $array = ['id_buku' => $id, 'status' => 'tersedia'];
-    $result = $ci->db->where($array)->get('tabel_id_buku');
+    $result = $ci->db->where($array)->get('table_id_buku');
     return $result->num_rows();
 }
 
@@ -103,7 +129,7 @@ function idBuku_byIndex($id)
 {
     $ci = &get_instance();
     $ci->load->database();
-    $result = $ci->db->where('id', $id)->get('tabel_id_buku');
+    $result = $ci->db->where('id', $id)->get('table_id_buku');
     foreach ($result->result() as $c) {
         $stmt = $c->id_buku;
         return $stmt;
@@ -116,9 +142,9 @@ function judulBuku_byIndex($id)
     $ci->load->database();
     $judul = '';
     $result = $ci->db->select('*')
-        ->from('tabel_id_buku')
-        ->join('table_buku', 'tabel_id_buku.id_buku = table_buku.id_buku')
-        ->where('tabel_id_buku.index_buku', $id)
+        ->from('table_id_buku')
+        ->join('table_buku', 'table_id_buku.id_buku = table_buku.id_buku')
+        ->where('table_id_buku.index_buku', $id)
         ->get();
     foreach ($result->result() as $c) {
         $stmt = $c->nama_buku;
@@ -126,8 +152,6 @@ function judulBuku_byIndex($id)
     }
     return $judul;
 }
-
-
 // END BUKU
 
 // ANGGOTA
@@ -148,6 +172,23 @@ function idLevel_byMember($id)
     return $level;
 }
 
+function nisMember_byIdLevel($id)
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $nis = '';
+    $result = $ci->db->select('*')
+        ->from('table_level')
+        ->join('table_member', 'table_level.id_level = table_member.id_level')
+        ->where('table_level.id_level', $id)
+        ->get();
+    foreach ($result->result() as $c) {
+        $stmt = $c->nis;
+        $nis = $nis . $stmt;
+    }
+    return $nis;
+}
+
 function nama_byNis($id)
 {
     $ci = &get_instance();
@@ -165,7 +206,7 @@ function index_pinjam($id)
 {
     $ci = &get_instance();
     $ci->load->database();
-    $result = $ci->db->where('id', $id)->get('tabel_index_pinjam');
+    $result = $ci->db->where('id', $id)->get('table_index_pinjam');
     foreach ($result->result() as $c) {
         $stmt = $c->index_pinjam;
         return $stmt;
@@ -176,10 +217,106 @@ function tgl_kembali($id)
 {
     $ci = &get_instance();
     $ci->load->database();
-    $result = $ci->db->where('index_pinjam', $id)->get('tabel_index_pinjam');
+    $result = $ci->db->where('index_pinjam', $id)->get('table_index_pinjam');
     foreach ($result->result() as $c) {
         $stmt = $c->tgl_kembali;
         return $stmt;
     }
 }
+
+function cek_peminjaman_konfirmasi_pinjam($id, $nis)
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $index_pinjam = '';
+    $result = $ci->db->where(['id_buku' => $id, 'nis' => $nis])
+        ->get('table_peminjaman');
+    foreach ($result->result() as $c) {
+        $stmt = $c->index_pinjam;
+        $index_pinjam = $index_pinjam . $stmt;
+    }
+    $res = $ci->db->where(['index_pinjam' => $index_pinjam, 'konfirmasi_pinjam' => 'not'])
+        ->get('table_index_pinjam');
+    return $res->num_rows();
+}
+
+function cek_peminjaman_konfirmasi_kembali($id, $nis)
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $index_pinjam = '';
+    $result = $ci->db->where(['id_buku' => $id, 'nis' => $nis])
+        ->get('table_peminjaman');
+    foreach ($result->result() as $c) {
+        $stmt = $c->index_pinjam;
+        $index_pinjam = $index_pinjam . $stmt;
+    }
+    $res = $ci->db->where(['index_pinjam' => $index_pinjam, 'konfirmasi_kembali' => 'not'])
+        ->get('table_index_pinjam');
+    return $res->num_rows();
+}
+
 // END PEMINJAMAN
+
+// DENDA
+function nominal_denda($id)
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $result = $ci->db->where('id', $id)->get('table_denda');
+    foreach ($result->result() as $c) {
+        $stmt = $c->denda;
+        return $stmt;
+    }
+}
+
+function denda_keterlambatan($id)
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $result = $ci->db->where('index_pinjam', $id)->get('table_telat_mengembalikan');
+    foreach ($result->result() as $c) {
+        $stmt = $c->denda;
+        return $stmt;
+    }
+}
+
+function konfirmasi_bayar_denda($id)
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $result = $ci->db->where('index_pinjam', $id)->get('table_telat_mengembalikan');
+    foreach ($result->result() as $c) {
+        $stmt = $c->konfirmasi;
+        return $stmt;
+    }
+}
+
+// END DENDA
+
+// TOTAL
+function jumlah_rak()
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $result = $ci->db->get('table_rak');
+    return $result->num_rows();
+}
+
+function jumlah_kategori()
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $result = $ci->db->get('table_kategori');
+    return $result->num_rows();
+}
+
+function jumlah_judul_buku()
+{
+    $ci = &get_instance();
+    $ci->load->database();
+    $result = $ci->db->get('table_buku');
+    return $result->num_rows();
+}
+
+// END TOTAL

@@ -36,7 +36,7 @@
 <body>
     <?php $this->load->view('style/sidebar') ?>
     <div class="p-4 sm:ml-64 bg-gray-100 min-h-screen font-popins">
-        <div class="mt-14 flex justify-between">
+        <div class=" flex justify-between">
             <h1 class="text-xl font-semibold">Buku</h1>
             <ul class="flex gap-2 sm:text-base text-sm">
                 <li class=""> Buku</li>
@@ -44,7 +44,9 @@
         </div>
         <div class="bg-white p-5 mt-5 ">
             <div class="flex justify-between">
-                <div></div>
+                <div>
+                    <h1 class="text-xl font-semibold">Buku</h1>
+                </div>
                 <a href="<?= base_url('admin/tambah_buku') ?>">
                     <button class="block text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-sky-600 rounded-lg" type="button">
                         <i class="fas fa-plus"></i>
@@ -105,7 +107,7 @@
                                     <td class="px-6 py-4 text-center">
                                         <?php echo jumlah_buku($row->id_buku) ?>
                                     </td>
-                                    <td class="px-6 py-4 flex items-center justify-center">
+                                    <td class="px-6 py-4 text-center">
                                         <a href="<?= base_url('admin/edit_buku/' . $row->id_buku) ?>">
                                             <button class="text-white bg-primary hover:bg-sky-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1">
                                                 <i class="text-base sm:text-lg fas fa-edit"></i>
@@ -142,12 +144,56 @@
     <?php $this->load->view('style/body') ?>
     <script type="text/javascript">
         function hapus(id) {
-            var yes = confirm('Anda Yakin Untuk Menghapus?');
-            if (yes == true) {
-                window.location.href = "<?php echo base_url('admin/hapus_buku/') ?>" + id;
-            }
+            Swal.fire({
+                title: 'Anda Yakin Untuk Mengapus?',
+                text: "Data Tidak Bisa Dikembalikan",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setTimeout(function() {
+                        window.location.href = "<?php echo base_url('admin/hapus_buku') ?>" + "/" + id;
+                    }, 1500);
+                    Swal.fire({
+                        title: 'Terhapus!',
+                        text: 'Berhasil Menghapus Buku!',
+                        icon: 'success',
+                        showConfirmButton: false
+                    })
+                }
+            })
         }
     </script>
+
+    <!-- SWEETALERT -->
+    <?php if ($this->session->flashdata('successAddBuku')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '<?= $this->session->flashdata('successAddBuku') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if ($this->session->flashdata('successEditBuku')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '<?= $this->session->flashdata('successEditBuku') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+    <!-- END SWEETALERT -->
 </body>
 
 </html>

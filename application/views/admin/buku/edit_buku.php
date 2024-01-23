@@ -11,7 +11,7 @@
 <body>
     <?php $this->load->view('style/sidebar') ?>
     <div class="p-4 sm:ml-64 bg-gray-100 min-h-screen font-popins">
-        <div class="mt-14 flex justify-between">
+        <div class=" flex justify-between">
             <h1 class="text-xl font-semibold">Edit Buku</h1>
             <ul class="flex gap-2 sm:text-base text-sm">
                 <li class="capitalize text-primary"><a href="<?php echo base_url('admin/buku') ?>">Buku</a></li>
@@ -27,10 +27,10 @@
                         <div><label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kategori</label>
                             <div class="mb-4">
                                 <select name="kategori" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                    <option selected value="<?= $row->id_kategori ?>">Rak <?php echo tampil_nama_rak($row->id_kategori) . ' - ' . tampil_nama_kategori($row->id_kategori) ?></option>
+                                    <option selected value="<?= $row->id_kategori ?>">Rak <?php echo namaRak_byKategori($row->id_kategori) . ' - ' . tampil_nama_kategori($row->id_kategori) ?></option>
                                     <option disabled>Pilih Kategori</option>
                                     <?php foreach ($kategori as $data) : ?>
-                                        <option value="<?php echo $data->id_kategori ?>">Rak <?php echo tampil_nama_rak($data->id_kategori) . ' - ' . $data->nama_kategori ?></option>
+                                        <option value="<?php echo $data->id_kategori ?>">Rak <?php echo namaRak_byKategori($data->id_kategori) . ' - ' . $data->nama_kategori ?></option>
                                     <?php endforeach ?>
                                 </select>
                             </div>
@@ -86,6 +86,20 @@
             }
         }
     </script>
+
+    <!-- SWEETALERT -->
+    <?php if ($this->session->flashdata('errorAddBuku')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: '<?= $this->session->flashdata('errorAddBuku') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+    <!-- END SWEETALERT -->
 </body>
 
 </html>

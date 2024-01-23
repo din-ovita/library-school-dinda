@@ -36,7 +36,7 @@
 <body>
     <?php $this->load->view('style/sidebar') ?>
     <div class="p-4 sm:ml-64 bg-gray-100 min-h-screen font-popins">
-        <div class="mt-14 flex justify-between">
+        <div class=" flex justify-between">
             <h1 class="text-xl font-semibold">Rak Buku</h1>
             <ul class="flex gap-2 sm:text-base text-sm">
                 <li class=""> Rak Buku</li>
@@ -157,10 +157,28 @@
     <?php $this->load->view('style/body') ?>
     <script type="text/javascript">
         function hapus(id) {
-            var yes = confirm('Anda Yakin Untuk Menghapus?');
-            if (yes == true) {
-                window.location.href = "<?php echo base_url('admin/hapus_rak/') ?>" + id;
-            }
+            Swal.fire({
+                title: 'Anda Yakin Untuk Mengapus?',
+                text: "Data Tidak Bisa Dikembalikan",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setTimeout(function() {
+                        window.location.href = "<?php echo base_url('admin/hapus_rak') ?>" + "/" + id;
+                    }, 1500);
+                    Swal.fire({
+                        title: 'Terhapus!',
+                        text: 'Berhasil Menghapus Rak!',
+                        icon: 'success',
+                        showConfirmButton: false
+                    })
+                }
+            })
         }
 
         let nama_rak = $('#nama_rak');
@@ -199,12 +217,59 @@
                     console.log(me);
                 },
                 success: function(data) {
-                    console.log(data);
-                    window.location.reload();
+                    if (data.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: data.message,
+                            showConfirmButton: false,
+                            timer: 1500,
+                            didClose: () => {
+                                window.location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: data.message,
+                            showConfirmButton: false,
+                            timer: 1500,
+                            didClose: () => {
+                                window.location.reload();
+                            }
+                        });
+                    }
                 }
             });
         }
     </script>
+
+    <!-- SWEETALERT -->
+    <?php if ($this->session->flashdata('success')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '<?= $this->session->flashdata('success') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if ($this->session->flashdata('error')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: '<?= $this->session->flashdata('error') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+    <!-- END SWEETALERT -->
 </body>
 
 </html>

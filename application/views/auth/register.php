@@ -19,7 +19,14 @@
                         <div class="absolute bottom-2 left-3">
                             <i class="fas fa-user-circle"></i>
                         </div>
-                        <input type="text" name="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your username">
+                        <input type="text" name="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukkan Username">
+                    </div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NIS</label>
+                    <div class="relative mb-4">
+                        <div class="absolute bottom-2 left-3">
+                            <i class="fas fa-address-card"></i>
+                        </div>
+                        <input type="text" name="nis" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukkan NIS">
                     </div>
                     <div class="relative">
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
@@ -56,6 +63,33 @@
             }
         }
     </script>
+
+    <!-- SWEETALERT -->
+    <?php if ($this->session->flashdata('errorPassword')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Mendaftar!',
+                text: '<?= $this->session->flashdata('errorPassword') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if ($this->session->flashdata('errorUsername')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Mendaftar!',
+                text: '<?= $this->session->flashdata('errorUsername') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+    <!-- END SWEETALERT -->
+
 </body>
 
 </html>

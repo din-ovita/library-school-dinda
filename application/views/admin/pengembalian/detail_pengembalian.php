@@ -12,7 +12,7 @@
 <body>
     <?php $this->load->view('style/sidebar') ?>
     <div class="p-4 sm:ml-64 bg-gray-100  min-h-screen font-popins">
-        <div class="mt-14 flex justify-between">
+        <div class=" flex justify-between">
             <h1 class="text-xl font-semibold">Detail Pengembalian Buku</h1>
             <ul class="flex gap-2 sm:text-base text-sm">
                 <li class="capitalize text-primary"><a href="<?php echo base_url('admin/pengembalian') ?>">Pengembalian</a></li>
@@ -74,18 +74,14 @@
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Denda</label>
                             <div class="mb-4">
-                                <p><?= convRupiah($row->denda) ?></p>
+                                <p class="capitaliz"><?= convRupiah(denda_keterlambatan($row->index_pinjam)) ?></p>
                             </div>
                             <hr><br>
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Konfirmasi Denda Terbayar</label>
                             <div class="mb-4">
-                                <?php if ($row->konfirmasi_bayar_denda == 'not') : ?>
-                                    <p class="capitalize">belum</p>
-                                <?php else : ?>
-                                    <p class="capitalize">sudah</p>
-                                <?php endif ?>
+                                <p class="capitalize"><?= konfirmasi_bayar_denda($row->index_pinjam) ?></p>
                             </div>
                             <hr><br>
                         </div>
