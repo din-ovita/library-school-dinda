@@ -17,12 +17,12 @@
             <div class="mt-24 sm:mt-0">
                 <h1 class="text-center text-4xl text-primary"><b>L'Binusa</b></h1>
                 <form action="<?php echo base_url('login/aksi_login') ?>" method="POST" class="mb-4 mt-12">
-                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NIS</label>
                     <div class="relative mb-4">
                         <div class="absolute bottom-2 left-3">
-                            <i class="fas fa-user-circle"></i>
+                            <i class="fas fa-address-card"></i>
                         </div>
-                        <input type="text" name="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukkan username">
+                        <input type="text" name="nis" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukkan NIS">
                     </div>
                     <div class="relative">
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
@@ -35,7 +35,8 @@
                         <button type="submit" class="text-white bg-primary hover:bg-sky-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full w-full text-sm px-5 py-2.5 text-center me-2 mb-2">Masuk</button>
                     </div>
                 </form>
-                <p class="text-sm text-gray-900 font-medium">Belum punya akun? Silahkan <a href="<?php echo base_url('register') ?>" class="underline text-primary">Daftar</a></p>
+                <p class="text-sm text-gray-900 font-medium text-center"><a href="<?php echo base_url('login/login_admin') ?>" class="underline text-primary">Masuk Sebagai Admin</a></p>
+                <!-- <p class="text-sm text-gray-900 font-medium">Belum punya akun? Silahkan <a href="<?php echo base_url('register') ?>" class="underline text-primary">Daftar</a></p> -->
             </div>
         </div>
     </section>

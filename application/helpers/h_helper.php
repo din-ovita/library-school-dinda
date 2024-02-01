@@ -43,6 +43,7 @@ function tampil_nama_rak($id)
         return $stmt;
     }
 }
+
 function namaRak_byKategori($id)
 {
     $ci = &get_instance();
@@ -224,6 +225,14 @@ function tgl_kembali($id)
     }
 }
 
+function cek_konfirmasi_pinjam($id) {
+    $ci = &get_instance();
+    $ci->load->database();
+    $result = $ci->db->where(['index_pinjam'=> $id, 'konfirmasi_pinjam' => 'yes', 'konfirmasi_kembali' => 'not'])->get('table_index_pinjam');
+    return $result->num_rows();
+}
+
+
 function cek_peminjaman_konfirmasi_pinjam($id, $nis)
 {
     $ci = &get_instance();
@@ -235,7 +244,7 @@ function cek_peminjaman_konfirmasi_pinjam($id, $nis)
         $stmt = $c->index_pinjam;
         $index_pinjam = $index_pinjam . $stmt;
     }
-    $res = $ci->db->where(['index_pinjam' => $index_pinjam, 'konfirmasi_pinjam' => 'not'])
+    $res = $ci->db->where(['index_pinjam' => $index_pinjam, 'konfirmasi_pinjam' => 'not', 'konfirmasi_kembali' => 'not'])
         ->get('table_index_pinjam');
     return $res->num_rows();
 }
@@ -255,7 +264,6 @@ function cek_peminjaman_konfirmasi_kembali($id, $nis)
         ->get('table_index_pinjam');
     return $res->num_rows();
 }
-
 // END PEMINJAMAN
 
 // DENDA
@@ -291,7 +299,6 @@ function konfirmasi_bayar_denda($id)
         return $stmt;
     }
 }
-
 // END DENDA
 
 // TOTAL
@@ -318,5 +325,5 @@ function jumlah_judul_buku()
     $result = $ci->db->get('table_buku');
     return $result->num_rows();
 }
-
 // END TOTAL
+

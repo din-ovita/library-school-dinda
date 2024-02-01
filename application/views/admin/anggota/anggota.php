@@ -36,27 +36,40 @@
 
 <body>
     <?php $this->load->view('style/sidebar') ?>
-    <div class="p-4 sm:ml-64 bg-gray-100  min-h-screen font-popins">
-        <div class="flex justify-between">
-            <h1 class="text-xl font-semibold">Anggota</h1>
-            <ul class="flex gap-2 sm:text-base text-sm">
-                <li class=""> Anggota</li>
-            </ul>
-        </div>
+    <div class="p-4 sm:ml-64 bg-gray-50  min-h-screen font-popins">
+        <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 rtl:space-x-reverse">
+                <li class="inline-flex items-center">
+                    <a href="<?= base_url('admin') ?>" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary dark:text-gray-400 dark:hover:text-white">
+                        <i class="text-lg fas fa-chart-pie"></i>
+                        <span class="ml-2">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                        </svg>
+                        <a href="#" class="text-sm font-medium text-gray-500 dark:text-gray-400 dark:hover:text-white">Anggota</a>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
         <div class="bg-white p-5 mt-5 ">
             <div class="flex justify-between">
                 <div>
                     <h1 class="text-xl font-semibold">Anggota</h1>
                 </div>
-                <div class="flex gap-2">
-                    <a href="<?= base_url('admin/export_anggota') ?>" class="block text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-600 rounded-lg">
-                        <i class="fas fa-arrow-down"></i> Export
+                <div class="flex flex-col md:flex-row gap-2">
+                    <a href="<?= base_url('admin/export_anggota') ?>" class="block text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium text-sm md:px-5 md:py-2.5 px-3 py-1.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-600 rounded-lg">
+                        <i class="fas fa-arrow-down"></i> <span class="text-xs md:text-sm">Export</span>
                     </a>
-                    <button data-modal-target="default-modal2" data-modal-toggle="default-modal2" class="block text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-600 rounded-lg" type="button">
-                        <i class="fas fa-arrow-up"></i> Upload </button>
-                    <button data-modal-target="default-modal" data-modal-toggle="default-modal" class="block text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-sky-600 rounded-lg" type="button">
+                    <button data-modal-target="default-modal2" data-modal-toggle="default-modal2" class="block text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium text-sm md:px-5 md:py-2.5 px-3 py-1.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-600 rounded-lg" type="button">
+                        <i class="fas fa-arrow-up"></i> <span class="text-xs md:text-sm">Upload</span> </button>
+                    <button data-modal-target="default-modal" data-modal-toggle="default-modal" class="block text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm md:px-5 md:py-2.5 px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-sky-600 rounded-lg" type="button">
                         <i class="fas fa-plus"></i>
-                        Tambah </button>
+                        <span class="text-xs md:text-sm">Tambah</span> </button>
                 </div>
             </div>
             <div class="relative overflow-x-auto mt-5 mb-5">
@@ -94,7 +107,7 @@
                                     <td class="px-6 py-4 text-center">
                                         <button type="button" class="text-white bg-primary hover:bg-sky-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1" onclick="edit(<?php echo $row->id_member ?>)"> <i class="text-base sm:text-lg fas fa-edit"></i>
                                         </button>
-                                        <button type="button" class="ml-2 text-white bg-red-500 hover:bg-red-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1" onclick="hapus(<?php echo $row->id_member ?>)"> <i class="text-base sm:text-lg fas fa-trash"></i>
+                                        <button type="button" class="mt-2 md:mt-0 md:ml-2 text-white bg-red-500 hover:bg-red-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1" onclick="hapus(<?php echo $row->id_member ?>)"> <i class="text-base sm:text-lg fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -146,7 +159,7 @@
                         </div>
                         <div class="flex items-center border-t pt-4 border-gray-200 rounded-b dark:border-gray-600">
                             <button type="submit" class="text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-primary dark:focus:ring-sky-600">Tambah</button>
-                            <button data-modal-hide="default-modal" type="button" class="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Batal</button>
+                            <button data-modal-hide="default-modal" type="button" class="ms-3 text-gray-500 bg-white hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Batal</button>
                         </div>
                     </form>
                 </div>
@@ -183,7 +196,7 @@
                         </div>
                         <div class="flex items-center border-t pt-4 border-gray-200 rounded-b dark:border-gray-600">
                             <button type="submit" class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-500 dark:focus:ring-green-600">Upload</button>
-                            <button data-modal-hide="default-modal2" type="button" class="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Batal</button>
+                            <button data-modal-hide="default-modal2" type="button" class="ms-3 text-gray-500 bg-white hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Batal</button>
                         </div>
                     </form>
                 </div>
@@ -217,6 +230,10 @@
                 }
             })
         }
+
+        function edit(id) {
+            window.location.href = "<?= base_url('admin/edit_anggota/') ?>" + id;
+        }
     </script>
 
     <!-- SWEETALERT -->
@@ -226,6 +243,18 @@
                 icon: 'success',
                 title: 'Berhasil!',
                 text: '<?= $this->session->flashdata('successAddMember') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if ($this->session->flashdata('successEdit')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '<?= $this->session->flashdata('successEdit') ?>',
                 showConfirmButton: false,
                 timer: 1500,
             });
@@ -255,7 +284,7 @@
             });
         </script>
     <?php endif; ?>
-    
+
     <?php if ($this->session->flashdata('successRegister')) : ?>
         <script>
             Swal.fire({

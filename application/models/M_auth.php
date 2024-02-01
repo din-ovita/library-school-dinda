@@ -1,11 +1,11 @@
 <?php
 class m_auth extends CI_Model
 {
-    function cek_login($table, $where)
+    public function cek_login($table, $where)
     {
-        return $this->db->get_where($table, $where);
+        $data = $this->db->where($where)->get($table);
+        return $data;
     }
-
     public function registrasi($tabel, $data)
     {
         $this->db->insert($tabel, $data);

@@ -10,11 +10,16 @@ class m_member extends CI_Model
 
     public function get_terbaru($table, $limit)
     {
-        $this->db->order_by('date', 'desc');
+        $this->db->order_by('timestamp', 'desc');
         $this->db->limit($limit);
         return $this->db->get($table)->result();
     }
 
+    public function get_limit($table, $limit)
+    {
+        $this->db->limit($limit);
+        return $this->db->get($table)->result();
+    }
 
     public function get_id($table, $id_col, $id)
     {
@@ -66,5 +71,49 @@ class m_member extends CI_Model
     {
         $this->db->insert('table_telat_mengembalikan', $data);
         return $this->db->insert_id();
+    }
+
+    // ANGGOTA
+    public function update_profile($data, $where)
+    {
+        $this->db->update('table_level', $data, $where);
+        return $this->db->affected_rows();
+    }
+
+    // for pagination
+    public function get_items($limit, $offset, $tabel)
+    {
+        $this->db->limit($limit, $offset);
+        $query = $this->db->get($tabel);
+        return $query->result();
+    }
+
+    public function get_items_terbaru($limit, $offset, $tabel)
+    {
+        $this->db->order_by('timestamp', 'desc');
+        $this->db->limit($limit, $offset);
+        $query = $this->db->get($tabel);
+        return $query->result();
+    }
+
+    public function get_items_where($limit, $offset, $tabel, $where)
+    {
+        $this->db->order_by('timestamp', 'desc');
+        $this->db->limit($limit, $offset);
+        $this->db->where($where);
+        $query = $this->db->get($tabel);
+        return $query->result();
+    }
+
+    public function count_items($tabel)
+    {
+        return $this->db->get($tabel)->num_rows();
+    }
+
+    // BUKU
+    public function search_by_judul($judul) {
+        $this->db->like('nama_buku', $judul);
+        $query = $this->db->get('table_buku');
+        return $query->result();
     }
 }

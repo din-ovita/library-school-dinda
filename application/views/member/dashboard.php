@@ -5,107 +5,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>L'Binusa</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js" integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <?php $this->load->view('style/head') ?>
 </head>
 
-<body class="font-popins">
-    <?php $this->load->view('style/navbar') ?>
-    <div class="mt-12 bg-gradient-to-b from-second to-white h-screen flex flex-col-reverse md:flex-row md:gap-32 px-5 md:px-12 items-center">
-        <div class="">
-            <div class="py-8 px-4 mx-auto max-w-screen-xl text-left lg:py-16 z-10 relative">
-                <p class="mb-8 text-base font-normal text-gray-500 lg:text-xl dark:text-gray-200"><span class="text-4xl md:text-6xl font-extrabold tracking-tight leading-none">"Perpustakaan</span> menyimpan energi yang memicu imajinasi. Perpustakaan membuka jendela ke dunia dan menginspirasi kita untuk mengeksplorasi dan mencapai, dan berkontribusi untuk meningkatkan kualitas hidup kita." <span class="font-semibold">- Sidney Sheldon</span></p>
-            </div>
-        </div>
-        <div id="indicators-carousel" class="relative w-52 md:w-full" data-carousel="static">
-            <div class="relative h-56 overflow-hidden rounded-lg md:h-[26rem] ">
-                <?php $id = 0;
-                foreach ($books as $row) : $id++ ?>
-                    <div class="hidden duration-700 ease-in-out" data-carousel-item="<?= $id ?>">
-                        <img src="<?= base_url('assets/buku/' . $row->foto) ?>" class="absolute block h-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                    </div>
+<style>
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px #f3f4f6;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #9ca3af;
+    }
+</style>
+
+<body>
+    <?php $this->load->view('style/sidebar_member') ?>
+    <div class="p-4 mt-16 md:mt-0 sm:ml-64 bg-gray-50 font-popins">
+        <div class="bg-sky-100 shadow-lg mt-6 md:mt-12 h-32 md:h-44 p-2 md:p-5 rounded items-center w-full flex justify-between overflow-visible">
+            <div>
+                <?php foreach ($user as $row) : ?>
+                    <h1 class="font-bold text-xl md:text-4xl">Hi, <?= $row->username ?></h1>
+                    <p class="md:text-base text-xs">Bersiap untuk jelajahi pengetahuan baru!</p>
                 <?php endforeach ?>
             </div>
-
-            <div class="absolute z-30 flex -translate-x-1/2 space-x-3 rtl:space-x-reverse bottom-5 left-1/2">
-                <?php for ($i = 0; $i < count($books); $i++) : ?>
-                    <button type="button" class="w-3 h-3 rounded-full <?= $i === 0 ? 'bg-white dark:bg-gray-800' : 'bg-white/30 dark:bg-gray-800/30' ?>" aria-current="<?= $i === 0 ? 'true' : 'false' ?>" aria-label="Slide <?= $i + 1 ?>" data-carousel-slide-to="<?= $i ?>"></button>
-                <?php endfor ?>
-            </div>
+            <img src="<?= base_url('assets/image/book6.png') ?>" alt="" class="h-48 md:h-72 z-20 mb-6 md:mb-14">
         </div>
-    </div>
-    <div class="px-3 md:px-12">
-        <h1 class="text-2xl font-medium tracking-tight leading-none text-gray-900 md:text-3xl lg:text-5xl">Rekomendasi L'Binusa</h1>
-        <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="mx-4 md:hidden text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800" type="button">Kategori Buku
-        </button>
-        <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 ">
-            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                <?php foreach ($kategori as $row) : ?>
-                    <li class="px-5 py-2 hover:bg-gray-100">
-                        <button class="flex items-center rounded-lg group kategori<?= $row->id_kategori ?>" onclick="kategori(<?= $row->id_kategori ?>)">
-                            <?= $row->nama_kategori ?>
-                        </button>
-                    </li>
-                <?php endforeach ?>
-            </ul>
-        </div>
-
-        <div class="flex my-12">
-            <div class="border-r-2 hidden md:block mr-8">
-                <ul class="space-y-2 font-medium w-48">
-                    <?php foreach ($kategori as $row) : ?>
-                        <li>
-                            <button class="flex items-center p-2 rounded-lg group kategori<?= $row->id_kategori ?>" onclick="kategori(<?= $row->id_kategori ?>)">
-                                <?= $row->nama_kategori ?>
-                            </button>
-                        </li>
-                    <?php endforeach ?>
-                </ul>
-            </div>
-            <div class="mx-auto">
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-5 test">
-                    <?php foreach ($buku as $row) : ?>
-                        <div class="bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 relative">
-                            <img class="rounded-t-lg w-full h-56" src="<?= base_url('assets/buku/' . $row->foto) ?>" alt="" />
-                            <div class="p-2 h-32 md:h-40">
-                                <p class="font-medium text-xs md:text-sm text-gray-700 mb-2"><?= $row->pengarang ?></p>
-                                <p class="font-semibold text-sm md:text-base"><?= $row->nama_buku ?></p>
+        <div class="my-8">
+            <h1 class="font-semibold text-2xl">Buku Terbaru</h1>
+            <div class="mx-auto m2-5">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 test">
+                    <?php foreach ($new_book as $row) : ?>
+                        <div class="bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 relative">
+                            <img class="rounded-t-lg w-full h-44 md:h-52" src="<?= base_url('assets/buku/' . $row->foto) ?>" alt="" />
+                            <div class="p-3 h-36">
+                                <p class="tracking-tight text-gray-900 font-medium text-sm"><?= $row->pengarang ?></p>
+                                <h5 class="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white"><?= $row->nama_buku ?></h5>
                             </div>
-                            <?php if (jumlah_buku_tersedia($row->id_buku) == 0) : ?>
-                                <button class="absolute bottom-2 mx-2 w-[90%] items-center px-3 py-2 text-sm font-medium text-center text-white bg-gray-500 rounded-lg hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-sky-800" disabled>
-                                    Tidak Tersedia
-                                </button>
-                            <?php elseif (cek_peminjaman_konfirmasi_kembali($row->id_buku, $this->session->userdata('nis')) != 0) : ?>
-                                <button class="absolute bottom-2 mx-2 w-[90%] items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-500 rounded-lg hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" disabled>
-                                    Sedang Dipinjam
-                                </button>
-                            <?php else : ?>
-                                <button class="absolute bottom-2 mx-2 w-[90%] items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300 dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800" onclick='pinjam(<?php echo $row->id_buku ?>)'>
-                                    Pinjam
-                                </button>
-                                <input type="text" value="<?= $this->session->userdata('nis') ?>" id="nis" class="hidden">
-                            <?php endif ?>
+                            <div class="absolute bottom-2 w-full px-3">
+                                <?php if (jumlah_buku_tersedia($row->id_buku) == 0) : ?>
+                                    <button class="w-full px-3 py-2 text-xs sm:text-sm font-medium text-center text-white bg-green-500 rounded-lg hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" disabled>Tidak Tersedia</button>
+                                <?php elseif (cek_peminjaman_konfirmasi_kembali($row->id_buku, $this->session->userdata('nis')) != 0) : ?>
+                                    <button class=" w-full px-3 py-2 text-xs sm:text-sm font-medium text-center text-white bg-green-500 rounded-lg hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" disabled>Sedang Dipinjam</button>
+                                <?php else : ?>
+                                    <input type="text" value="<?= $this->session->userdata('nis') ?>" id="nis" class="hidden">
+                                    <button onclick="pinjam(<?= $row->id_buku ?>)" class="w-full px-3 py-2 text-xs sm:text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300 dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800">Pinjam</button>
+                                <?php endif ?>
+                            </div>
+                        </div>
+                    <?php endforeach ?>
+                </div>
+                <div class="flex justify-center items-center mt-12">
+                    <a href="<?= base_url('member/kategori_buku') ?>" class="ms-3 text-gray-500 bg-white hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Lihat Lebih Banyak</a>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="my-8">
+            <h1 class="font-semibold text-2xl">Buku Rekomendasi</h1>
+            <div class="mx-auto mt-2">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 test">
+                    <?php foreach ($all_book as $row) : ?>
+                        <div class="bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 relative">
+                            <img class="rounded-t-lg w-full h-44 md:h-56" src="<?= base_url('assets/buku/' . $row->foto) ?>" alt="" />
+                            <div class="p-3 h-36">
+                                <p class="tracking-tight text-gray-900 font-medium text-sm"><?= $row->pengarang ?></p>
+                                <h5 class="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white"><?= $row->nama_buku ?></h5>
+                            </div>
+                            <div class="absolute bottom-2 w-full px-3">
+                                <?php if (cek_peminjaman_konfirmasi_kembali($row->id_buku, $this->session->userdata('nis')) != 0) : ?>
+                                    <button class=" w-full px-3 py-2 text-xs sm:text-sm font-medium text-center text-white bg-green-500 rounded-lg hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" disabled>Sedang Dipinjam</button>
+                                <?php elseif (jumlah_buku_tersedia($row->id_buku) == 0) : ?>
+                                    <button class=" w-full px-3 py-2 text-xs sm:text-sm font-medium text-center text-white bg-gray-500 rounded-lg hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800" disabled>Tidak Tersedia</button>
+                                <?php else : ?>
+                                    <input type="text" value="<?= $this->session->userdata('nis') ?>" id="nis" class="hidden">
+                                    <button onclick="pinjam(<?= $row->id_buku ?>)" class="w-full px-3 py-2 text-xs sm:text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300 dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800">Pinjam</button>
+                                <?php endif ?>
+                            </div>
                         </div>
                     <?php endforeach ?>
                 </div>
             </div>
-        </div>
+            <div class="flex justify-center items-center mt-12">
+                <a href="<?= base_url('member/kategori_buku') ?>" class="ms-3 text-gray-500 bg-white hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Lihat Lebih Banyak</a>
+            </div>
+        </div> -->
     </div>
+
     <?php $this->load->view('style/body') ?>
+
     <script>
-        function kategori(id) {
-            selectedId = id;
-            console.log("Clicked button with ID:", selectedId);
-            $.ajax({
-                url: '<?php echo base_url('member/data_buku') ?>',
-                method: 'POST',
-                data: {
-                    id: selectedId
-                },
-                success: function(response) {
-                    $('.test').html(response)
-                }
-            });
-        }
+        var nis = $('#nis');
 
         function pinjam(id) {
             console.log('test');
@@ -121,8 +120,29 @@
                     console.log(me);
                 },
                 success: function(data) {
-                    console.log(data);
-                    window.location.reload();
+                    if (data.pinjam === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: data.messagePinjam,
+                            showConfirmButton: false,
+                            timer: 1500,
+                            didClose: () => {
+                                window.location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: data.messagePinjamError,
+                            showConfirmButton: false,
+                            timer: 1500,
+                            didClose: () => {
+                                window.location.reload();
+                            }
+                        });
+                    }
                 }
             });
         }

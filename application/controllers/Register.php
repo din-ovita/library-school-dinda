@@ -23,7 +23,7 @@ class register extends CI_Controller
         $username = $this->input->post('username');
         $nis = $this->input->post('nis');
 
-        $cek_user = $this->m_auth->cek_login('table_level', ['username' => $username, 'nis' => $nis]);
+        $cek_user = $this->m_auth->cek_login('table_level', ['username' => $username, 'nis' => $nis])->num_rows();
         $pattern = "/^.{8}$/";
 
         if (!preg_match($pattern, $password)) {
@@ -31,7 +31,7 @@ class register extends CI_Controller
             redirect(base_url('register'));
         }
         
-        if($cek_user) {
+        if($cek_user != 0) {
             $this->session->set_flashdata('errorUsername', 'Username atau NIS Sudah Digunakan!');
             redirect(base_url('register'));
         }
@@ -45,6 +45,12 @@ class register extends CI_Controller
 
         $register = $this->m_auth->registrasi('table_level', $data);
         if ($register) {
+            $data2 = [
+                'nama' => $username,
+                'nis' => $nis,
+                'id_level' => $register
+            ];    
+            $this->m_auth->registrasi('table_member', $data2);
             $this->session->set_flashdata('successRegister', 'Pendaftaran Berhasil!');
             redirect(base_url('login'));
         } else {

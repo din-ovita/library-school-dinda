@@ -98,6 +98,19 @@ class m_admin extends CI_Model
         return $this->db->insert_id();
     }
 
+    public function update_member($data, $where)
+    {
+        $this->db->update('table_member', $data, $where);
+        return $this->db->affected_rows();
+    }
+
+    public function update_member_level($data, $where)
+    {
+        $this->db->update('table_level', $data, $where);
+        return $this->db->affected_rows();
+    }
+    // END ANGGOTA
+
     // for pagination
     public function get_items($limit, $offset, $tabel)
     {
@@ -165,5 +178,19 @@ class m_admin extends CI_Model
     {
         $this->db->update('table_telat_mengembalikan', $data, $where);
         return $this->db->affected_rows();
+    }
+
+    // PEMINJAMAN
+    public function all_peminjaman($date)
+    {
+        $this->db->select('*');
+        $this->db->from('table_index_pinjam');
+        $this->db->where(array(
+            'DATE_FORMAT(table_index_pinjam.timestamp, "%Y-%m") =' => $date
+        ));
+        $db = $this->db->get();
+        $result = $db->num_rows();
+
+        return $result;
     }
 }

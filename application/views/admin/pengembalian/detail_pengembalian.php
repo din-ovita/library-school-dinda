@@ -11,15 +11,35 @@
 
 <body>
     <?php $this->load->view('style/sidebar') ?>
-    <div class="p-4 sm:ml-64 bg-gray-100  min-h-screen font-popins">
-        <div class=" flex justify-between">
-            <h1 class="text-xl font-semibold">Detail Pengembalian Buku</h1>
-            <ul class="flex gap-2 sm:text-base text-sm">
-                <li class="capitalize text-primary"><a href="<?php echo base_url('admin/pengembalian') ?>">Pengembalian</a></li>
-                /<li class="text-center"> Detail Pengembalian Buku</li>
-            </ul>
-        </div>
-        <div class="bg-white p-5 mt-5 ">
+    <div class="p-4 sm:ml-64 bg-gray-50  min-h-screen font-popins">
+    <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 rtl:space-x-reverse">
+                <li class="inline-flex items-center">
+                    <a href="<?= base_url('admin') ?>" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary dark:text-gray-400 dark:hover:text-white">
+                        <i class="text-lg fas fa-chart-pie"></i>
+                        <span class="ml-2">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                        </svg>
+                        <a href="<?= base_url('admin/pengembalian_buku') ?>" class="text-sm font-medium text-gray-700 hover:text-primary dark:text-gray-400 dark:hover:text-white">Pengembalian</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                        </svg>
+                        <a href="#" class="text-sm font-medium text-gray-500 dark:text-gray-400 dark:hover:text-white">Detail</a>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <div class="bg-white p-5 mt-5 shadow-lg rounded">
             <h4 class="font-semibold text-2xl">Detail Pengembalian Buku</h4>
             <br>
             <?php foreach ($index as $row) : ?>
@@ -118,13 +138,10 @@
                     </tbody>
                 </table>
             </div>
-
-        </div>
-        <br>
-        <div class="flex justify-between">
-            <div></div>
-            <div>
-                <a href="<?= base_url('admin/pengembalian_buku') ?>" class="float-right text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center rounded-lg">Kembali</a>
+            <br>
+            <div class="flex justify-end">
+                <a href="<?= base_url('admin/pengembalian_buku') ?>" class="text-gray-500 bg-white hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                    Kembali </a>
             </div>
         </div>
     </div>

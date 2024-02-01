@@ -8,113 +8,122 @@
     <?php $this->load->view('style/head') ?>
 </head>
 
-<body class="font-popins">
-    <?php $this->load->view('style/navbar') ?>
-    <div class="pt-24 bg-gradient-to-b from-second to-white min-h-screen px-5 lg:px-12">
-        <h1 class="text-center mb-10 text-3xl font-extrabold tracking-tight leading-none text-primary md:text-4xl lg:text-5xl">Peminjaman</h1>
-        <div class="flex justify-center items-center">
-            <button class="<?php $indikator === 1 ? 'text-gray-500' : 'text-primary' ?> ms-3  bg-white focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-primary focus:z-10 mb-3 md:mb-0" onclick="getPeminjaman(1)">Menunggu Konfirmasi</button>
-            <button class="<?php $indikator === 2 ? 'text-gray-500' : 'text-primary' ?> ms-3 bg-white focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-primary focus:z-10 " onclick="getPeminjaman(2)">Peminjaman Buku</button>
-        </div>
-        <div class="relative overflow-x-auto mt-5 mb-5 bg-white p-5 shadow-xl">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 rounded-t-lg">
-                    <tr>
-                        <th scope="col" class="px-6 py-3" style="width: 8%;">
-                            No
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            No Peminjaman
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Nama
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-center">
-                            Aksi
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($peminjaman) : ?>
-                        <?php $no = 0;
-                        foreach ($peminjaman as $row) : $no++ ?>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    <?php echo $no ?>
-                                </th>
-                                <td class="px-6 py-4">
-                                    <?php echo $row->index_pinjam ?>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <?php echo nama_byNis($row->nis) ?>
-                                </td>
-                                <td class="px-6 py-4 text-center">
-                                    <button type="button" class="text-white bg-primary hover:bg-sky-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1" onclick="edit(<?php echo $row->id ?>)"> <i class="text-base sm:text-lg fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="ml-2 text-white bg-red-500 hover:bg-red-600 focus:outline-none font-medium text-center rounded-sm px-2 py-1" onclick="hapus(<?php echo $row->id ?>)"> <i class="text-base sm:text-lg fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        <?php endforeach ?>
-                    <?php else : ?>
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" colspan="4" class="text-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                Tidak ada data
-                            </th>
-                        </tr>
-                    <?php endif ?>
-                </tbody>
-            </table>
-        </div>
+<style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 0.5em auto;
+        list-style: none;
+    }
 
-        <!-- 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-start gap-6 px-4 md:px-8 test my-12">
-            <?php foreach ($peminjaman as $row) : ?>
-                <div class="h-auto bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700">
-                    <div class="p-5">
-                        <h5 class="text-lg md:text-xl font-bold tracking-tight text-gray-900 "><?= $row->index_pinjam ?></h5>
-                        <?php if ($row->konfirmasi_pinjam === 'yes') : ?>
-                            <div class="my-2">
-                                <p class="font-semibold text-sm mb-1">Tanggal Pinjam</p>
-                                <p><?= indonesian_date($row->tgl_pinjam) ?></p>
-                            </div>
-                            <hr>
-                            <div class="my-2">
-                                <p class="font-semibold text-sm mb-1">Tanggal Kembali</p>
-                                <p><?= indonesian_date($row->tgl_kembali) ?></p>
-                            </div>
-                            <hr class="mb-5">
-                        <?php endif ?>
-                        <span class="text-sm text-green-700 bg-green-200 p-1 rounded-md">Buku Yang Dipinjam</span>
-                        <ul class="mt-5 ml-5 list-outside list-disc">
-                            <?php $buku_dipinjam = $this->db->where(['index_pinjam' => $row->index_pinjam])->get('table_peminjaman')->result();
-                            foreach ($buku_dipinjam as $buku) : ?>
-                                <li>
-                                    <p class="font-semibold"><?= judulBuku_byIndex($buku->index_buku) ?></p>
-                                    <p><?= $buku->index_buku ?></p>
-                                </li>
-                            <?php endforeach ?>
-                        </ul>
-                        <?php if ($row->konfirmasi_pinjam === 'yes') : ?>
-                            <button onclick="kembalikan('<?= $row->index_pinjam ?>')" class="mt-5 w-full text-white bg-primary hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Kembalikan</button>
-                        <?php else : ?>
-                            <button disabled class="mt-5 w-full text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Menunggu Konfirmasi</button>
-                        <?php endif ?>
+    .pagination a,
+    .pagination li.active a {
+        border: 1px solid silver;
+        padding: 0.1em 0.5em;
+        border-radius: 10px;
+        color: black;
+        margin-right: 0.5em;
+        text-decoration: none;
+    }
+
+    .pagination a:hover,
+    .pagination li.active a {
+        border: 1px solid rgb(14 165 233);
+        background-color: rgb(14 165 233);
+        color: white;
+    }
+</style>
+
+<body>
+    <?php $this->load->view('style/sidebar_member') ?>
+    <div class="p-4 mt-14 sm:mt-0 sm:ml-64 bg-gray-50 min-h-screen font-popins">
+        <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 rtl:space-x-reverse">
+                <li class="inline-flex items-center">
+                    <a href="<?= base_url('member') ?>" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary dark:text-gray-400 dark:hover:text-white">
+                        <i class="text-lg fas fa-chart-pie"></i>
+                        <span class="ml-2">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                        </svg>
+                        <a href="#" class="text-sm font-medium text-gray-500 dark:text-gray-400 dark:hover:text-white">Peminjaman</a>
                     </div>
-                </div>
-            <?php endforeach ?>
-        </div> -->
-    </div>
-    <?php $this->load->view('style/body') ?>
-    <script>
-        function getPeminjaman(id) {
-            window.location.href = "<?= base_url() ?>member/peminjaman_buku" + '?indikator=' + id;
-        }
+                </li>
+            </ol>
+        </nav>
+        <h1 class="font-semibold text-2xl mt-5">Peminjaman Buku</h1>
 
-        function kembalikan(id) {
-            window.location.href = "<?= base_url() ?>member/kembalikan_buku/" + id;
-        }
-    </script>
+        <div class="mx-auto my-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 test">
+                <?php foreach ($peminjaman as $row) : ?>
+                    <div class="bg-white rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 relative">
+                        <div class="p-3 h-60 text-center">
+                            <p class="tracking-tight text-gray-900 font-bold text-lg"><?= $row->index_pinjam ?></p>
+                            <h5 class="text-base font-medium tracking-tight text-gray-900 dark:text-white"><?= nama_byNis($row->nis) ?></h5>
+                            <h5 class="mb-2 text-sm font-medium tracking-tight text-gray-700 dark:text-white"><?= $row->nis ?></h5>
+                            <p class="text-sm font-normal mb-1">Tanggal Pinjam</p>
+                            <?php if ($row->konfirmasi_pinjam == 'yes' && $row->konfirmasi_kembali == 'not') : ?>
+                                <p class="font-medium">
+                                    <?= $row->tgl_pinjam ?>
+                                </p>
+                            <?php else : ?>
+                                - <?php endif ?> </td>
+                            <p class="text-sm font-normal mb-1">Tanggal Kembali</p>
+                            <?php if ($row->konfirmasi_pinjam == 'yes' && $row->konfirmasi_kembali == 'not') : ?>
+                                <p class="font-medium">
+                                    <?= $row->tgl_kembali ?>
+                                </p>
+                            <?php else : ?>
+                                - <?php endif ?> </td>
+                        </div>
+                        <div class="absolute bottom-2 w-full px-3 flex">
+                            <?php if (cek_konfirmasi_pinjam($row->index_pinjam) != 0) : ?>
+                                <a href="<?= base_url('member/kembalikan_buku/' . $row->index_pinjam) ?>" class="w-full px-3 py-2 text-xs sm:text-sm font-medium text-center text-white bg-primary rounded hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300 dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800">Kembalikan</a>
+                            <?php else : ?>
+                                <button class="w-full px-3 py-2 text-xs sm:text-sm font-medium text-center text-white bg-gray-500 rounded hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800" disabled>Menunggu Konfirmasi</button>
+                            <?php endif ?>
+                            <a href="<?= base_url('member/detail_peminjaman/' . $row->index_pinjam) ?>" class="ml-2">
+                                <button class="text-white bg-yellow-300 hover:bg-yellow-400 focus:outline-none font-medium text-center rounded px-2 py-1">
+                                    <i class="text-base sm:text-lg fas fa-info-circle"></i>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                <?php endforeach ?>
+            </div>
+        </div>
+    </div>
+
+    <?php $this->load->view('style/body') ?>
+    <!-- SWEETALERT -->
+    <?php if ($this->session->flashdata('successKembalikan')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '<?= $this->session->flashdata('successKembalikan') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if ($this->session->flashdata('errorKembalikan')) : ?>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: '<?= $this->session->flashdata('errorKembalikan') ?>',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        </script>
+    <?php endif; ?>
+    <!-- END SWEETALERT -->
 </body>
 
 </html>

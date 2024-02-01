@@ -38,6 +38,23 @@ class admin extends CI_Controller
         }
     }
 
+    public function upload_img_profile($value)
+    {
+        $kode = round(microtime(true) * 1000);
+        $config['upload_path'] = './assets/member/';
+        $config['allowed_types'] = 'jpg|png|jpeg';
+        $config['max_size'] = '30000';
+        $config['file_name'] = $kode;
+        $this->upload->initialize($config);
+        if (!$this->upload->do_upload($value)) {
+            return array(false, '');
+        } else {
+            $fn = $this->upload->data();
+            $nama = $fn['file_name'];
+            return array(true, $nama);
+        }
+    }
+
     public function acak($long)
     {
         $char = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
@@ -55,6 +72,19 @@ class admin extends CI_Controller
             'menu' => 'dashboard',
             'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
+        $year = date('Y');
+        $data['jan'] = $this->m_admin->all_peminjaman($year . '-01');
+        $data['feb'] = $this->m_admin->all_peminjaman($year . '-02');
+        $data['maret'] = $this->m_admin->all_peminjaman($year . '-03');
+        $data['april'] = $this->m_admin->all_peminjaman($year . '-04');
+        $data['mei'] = $this->m_admin->all_peminjaman($year . '-05');
+        $data['juni'] = $this->m_admin->all_peminjaman($year . '-06');
+        $data['juli'] = $this->m_admin->all_peminjaman($year . '-07');
+        $data['agustus'] = $this->m_admin->all_peminjaman($year . '-08');
+        $data['september'] = $this->m_admin->all_peminjaman($year . '-09');
+        $data['oktober'] = $this->m_admin->all_peminjaman($year . '-10');
+        $data['november'] = $this->m_admin->all_peminjaman($year . '-11');
+        $data['desember'] = $this->m_admin->all_peminjaman($year . '-12');
         $this->load->view('admin/dashboard', $data);
     }
 
@@ -66,6 +96,99 @@ class admin extends CI_Controller
             'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result()
         ];
         $this->load->view('admin/profile', $data);
+    }
+
+    public function aksi_update_profile()
+    {
+        $foto = $this->upload_img_profile('foto');
+        $username = $this->input->post('username');
+        $new_pass = $this->input->post('new_pass');
+        $confirm_pass = $this->input->post('confirm_pass');
+        $id_level = $this->input->post('id_level');
+
+        $pattern = "/^.{8}$/";
+
+        if ($foto[0] === false) {
+            if (!empty($new_pass)) {
+                if (!preg_match($pattern, $new_pass)) {
+                    $this->session->set_flashdata('errorNewPassAdmin', 'Password Harus 8 Karakter!');
+                    redirect(base_url('admin/profile'));
+                }
+
+                if (md5($new_pass) != md5($confirm_pass)) {
+                    $this->session->set_flashdata('errorConfirmPassAdmin', 'Password Baru dengan Konfirmasi Password Harus Sama!');
+                    redirect(base_url('admin/profile'));
+                }
+
+                $data = [
+                    'username' => $username,
+                    'password' => md5($new_pass)
+                ];
+
+                $update = $this->m_admin->update_member_level($data, ['id_level' => $id_level]);
+                if ($update) {
+                    $this->session->set_flashdata('successEditAdmin', 'Update Profile Berhasil!');
+                    redirect(base_url('admin/profile'));
+                } else {
+                    $this->session->set_flashdata('errorEditAdmin', 'Update Profile Gagal...');
+                    redirect(base_url('admin/profile'));
+                }
+            } else {
+                $data = [
+                    'username' => $username,
+                ];
+
+                $update = $this->m_admin->update_member_level($data, ['id_level' => $id_level]);
+                if ($update) {
+                    $this->session->set_flashdata('successEditAdmin', 'Update Profile Berhasil!');
+                    redirect(base_url('admin/profile'));
+                } else {
+                    $this->session->set_flashdata('errorEditAdmin', 'Update Profile Gagal...');
+                    redirect(base_url('admin/profile'));
+                }
+            }
+        } else {
+            if (!empty($new_pass)) {
+                if (!preg_match($pattern, $new_pass)) {
+                    $this->session->set_flashdata('errorNewPassAdmin', 'Password Harus 8 Karakter!');
+                    redirect(base_url('admin/profile'));
+                }
+
+                if (md5($new_pass) != md5($confirm_pass)) {
+                    $this->session->set_flashdata('errorConfirmPassAdmin', 'Password Baru dengan Konfirmasi Password Harus Sama!');
+                    redirect(base_url('admin/profile'));
+                }
+
+                $data = [
+                    'username' => $username,
+                    'password' => md5($new_pass),
+                    'foto' => $foto[1]
+                ];
+
+                $update = $this->m_admin->update_member_level($data, ['id_level' => $id_level]);
+                if ($update) {
+                    $this->session->set_flashdata('successEditAdmin', 'Update Profile Berhasil!');
+                    redirect(base_url('admin/profile'));
+                } else {
+                    $this->session->set_flashdata('errorEditAdmin', 'Update Profile Gagal...');
+                    redirect(base_url('admin/profile'));
+                }
+            } else {
+                $data = [
+                    'username' => $username,
+                    'foto' => $foto[1]
+                ];
+
+                $update = $this->m_admin->update_member_level($data, ['id_level' => $id_level]);
+                if ($update) {
+                    $this->session->set_flashdata('successEditAdmin', 'Update Profile Berhasil!');
+                    redirect(base_url('admin/profile'));
+                } else {
+                    $this->session->set_flashdata('errorEditAdmin', 'Update Profile Gagal...');
+                    redirect(base_url('admin/profile'));
+                }
+            }
+        }
     }
     // END PROFILE
 
@@ -134,10 +257,8 @@ class admin extends CI_Controller
     {
         $hapus = $this->m_admin->delete('table_rak', 'id_rak', $id);
         if ($hapus) {
-            $this->session->set_flashdata('error', 'Hapus rak gagal!');
             redirect(base_url('admin/rak_buku'));
         } else {
-            $this->session->set_flashdata('success', 'Hapus rak berhasil!');
             redirect(base_url('admin/rak_buku'));
         }
     }
@@ -362,14 +483,16 @@ class admin extends CI_Controller
     {
         $kategori = $this->input->post('kategori');
         $judul = $this->input->post('judul');
+        $pengarang = $this->input->post('pengarang');
+        $deskripsi = $this->input->post('deskripsi');
         $cover = $this->upload_img('cover');
         $id_buku = $this->input->post('id_buku');
 
         if ($cover[0] === false) {
-            $data = ['id_kategori' => $kategori, 'nama_buku' => $judul, 'id_buku' => $id_buku];
+            $data = ['id_kategori' => $kategori, 'nama_buku' => $judul, 'id_buku' => $id_buku, 'pengarang' => $pengarang, 'deskripsi' => $deskripsi];
             echo "kurang";
         } else {
-            $data = ['id_kategori' => $kategori, 'foto' => $cover[1], 'nama_buku' => $judul, 'id_buku' => $id_buku];
+            $data = ['id_kategori' => $kategori, 'foto' => $cover[1], 'nama_buku' => $judul, 'id_buku' => $id_buku, 'pengarang' => $pengarang, 'deskripsi' => $deskripsi];
         }
 
         $edit = $this->m_admin->update_buku($data, ['id_buku' => $id_buku]);
@@ -697,6 +820,78 @@ class admin extends CI_Controller
         $writer = new Xlsx($spreadsheet);
         $writer->save('php://output');
     }
+
+    public function edit_anggota($id)
+    {
+        $data = [
+            'menu' => 'anggota',
+            'user' => $this->m_admin->getwhere('table_level', ['id_level' => $this->session->userdata('id')])->result(),
+            'member' => $this->m_admin->getwhere('table_member', ['id_member' => $id])->result()
+        ];
+        $this->load->view('admin/anggota/edit_anggota', $data);
+    }
+
+    public function aksi_edit_anggota()
+    {
+        $id_member = $this->input->post('id_member');
+        $nama = $this->input->post('nama');
+        $nis = $this->input->post('nis');
+        $new_pass = $this->input->post('new_pass');
+        $confirm_pass = $this->input->post('confirm_pass');
+        $id_level = idLevel_byMember($id_member);
+
+        $pattern = "/^.{8}$/";
+
+        if (!empty($new_pass)) {
+            if (!preg_match($pattern, $new_pass)) {
+                $this->session->set_flashdata('errorNewPass', 'Password Harus 8 Karakter!');
+                redirect(base_url('admin/edit_anggota/' . $id_member));
+            }
+
+            if (md5($new_pass) != md5($confirm_pass)) {
+                $this->session->set_flashdata('errorConfirmPass', 'Password Baru dengan Konfirmasi Password Harus Sama!');
+                redirect(base_url('admin/edit_anggota/' . $id_member));
+            }
+
+            $data_member = [
+                'id_member' => $id_member,
+                'nis' => $nis,
+                'nama' => $nama,
+            ];
+
+            $data_level = [
+                'id_level' => $id_level,
+                'password' => md5($new_pass)
+            ];
+
+            $edit_member = $this->m_admin->update_member($data_member, ['id_member' => $id_member]);
+            $edit_pass = $this->m_admin->update_member_level($data_level, ['id_level' => $id_level]);
+
+            if ($edit_member && $edit_pass) {
+                $this->session->set_flashdata('successEdit', 'Update Anggota Berhasil!');
+                redirect(base_url('admin/anggota'));
+            } else {
+                $this->session->set_flashdata('errorEdit', 'Update Anggota Gagal...');
+                redirect(base_url('admin/edit_anggota/' . $id_member));
+            }
+        } else {
+            $data_member = [
+                'id_member' => $id_member,
+                'nis' => $nis,
+                'nama' => $nama,
+            ];
+
+            $edit_member = $this->m_admin->update_member($data_member, ['id_member' => $id_member]);
+
+            if ($edit_member) {
+                $this->session->set_flashdata('successEdit', 'Update Anggota Berhasil!');
+                redirect(base_url('admin/anggota'));
+            } else {
+                $this->session->set_flashdata('errorEdit', 'Update Anggota Gagal...');
+                redirect(base_url('admin/edit_anggota/' . $id_member));
+            }
+        }
+    }
     // END ANGGOTA
 
     // PEMINJAMAN
@@ -916,6 +1111,7 @@ class admin extends CI_Controller
 
         $data = [
             'index_pinjam' => $id,
+            'konfirmasi_kembali_admin' => 'yes',
             'konfirmasi_kembali' => 'yes',
             'tgl_pengembalian' => date('Y-m-d'),
             'status' => $status,
@@ -1021,10 +1217,10 @@ class admin extends CI_Controller
 
         if ($hapus_pinjam) {
             $this->session->set_flashdata('success', 'Hapus pengembalian berhasil!');
-            redirect(base_url('admin/pengembalian'));
+            redirect(base_url('admin/pengembalian_buku'));
         } else {
             $this->session->set_flashdata('error', 'Hapus pengembalian gagal!');
-            redirect(base_url('admin/pengembalian'));
+            redirect(base_url('admin/pengembalian_buku'));
         }
     }
 
